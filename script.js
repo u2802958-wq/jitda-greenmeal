@@ -456,7 +456,6 @@ function installDashboardExtras() {
 installDashboardExtras();
 localizeInterface();
 $$('.meal-button').forEach((button) => button.addEventListener('click', () => { state.meal = button.dataset.meal; $$('.meal-button').forEach((item) => item.classList.toggle('active', item === button)); $('#resultLabel').textContent = `${state.meal} 예상 잔반량`; clearPredictionDisplay(); scheduleAutoPrediction(); }));
-$$('.sidebar-nav a').forEach((link) => link.addEventListener('click', () => { $$('.sidebar-nav a').forEach((item) => item.classList.toggle('active', item === link)); }));
 $('#clearMenu').addEventListener('click', clearSelectedMenu);
 $('#clearChosenButton').addEventListener('click', clearSelectedMenu);
 $('#menuSearch').addEventListener('input', (event) => { state.search = event.target.value; renderCatalog(); });

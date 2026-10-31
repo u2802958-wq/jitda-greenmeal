@@ -29,13 +29,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .official-brand-row { min-height: 84px; }
 .sidebar-brand { display: inline-flex; align-items: center; padding: 0; color: #17334a; font-size: 22px; font-weight: 700; letter-spacing: -.045em; }
 .sidebar-brand small { display: block; margin-top: 3px; color: #63717d; font-size: 11px; font-weight: 400; letter-spacing: 0; }
-.sidebar-nav { display: block; border-top: 1px solid #e1e6ea; background: #fff; }
-.official-nav-inner { min-height: 48px; justify-content: flex-start; gap: 30px; }
-.sidebar-nav a { display: inline-flex; min-height: 48px; align-items: center; padding: 0 2px; border-bottom: 3px solid transparent; color: #425462; font-size: 13px; font-weight: 600; }
-.sidebar-nav a:hover { color: var(--teal-dark); }
-.sidebar-nav a.active { border-bottom-color: var(--teal); background: transparent; color: var(--teal-dark); }
-.nav-icon, .sidebar-brand-mark, .sidebar-profile, .sidebar-note { display: none; }
-
 .content { width: min(1280px, 100%); min-width: 0; margin: 0 auto; padding: 30px 28px 48px; }
 .page-heading { align-items: center; margin: 0 0 22px; padding: 0 0 18px; border-bottom: 1px solid #d8dfe5; }
 .page-heading .eyebrow { margin: 0 0 5px; color: #536b7b; font-size: 12px; font-weight: 600; letter-spacing: 0; }
@@ -156,7 +149,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 @media (max-width: 760px) {
   .official-header-inner { padding-inline: 18px; }
   .official-brand-row { min-height: 70px; }
-  .official-nav-inner { gap: 22px; }
   .content { padding: 23px 18px 36px; }
 }
 
@@ -164,8 +156,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   .official-utility .official-header-inner span:last-child { display: none; }
   .official-brand-row { min-height: 66px; }
   .sidebar-brand { font-size: 19px; }
-  .official-nav-inner { gap: 17px; overflow-x: auto; }
-  .sidebar-nav a { flex: 0 0 auto; font-size: 12px; }
   .content { padding: 20px 14px 30px; }
   .page-heading h1 { font-size: 26px; }
   .page-heading .lede { font-size: 12px; }
