@@ -547,92 +547,12 @@ def predict():
             ), 400
     base = predict_value(meal, dishes)
     average = float(waste_df[waste_df["meal"] == meal]["waste"].mean())
-    if training.get("active_model") == "model_4":
-        try:
-            raw_importance = {
-                dish: abs(
-                    base
-                    - predict_model_4_raw(
-                        meal, [candidate for candidate in dishes if candidate != dish]
-                    )
-                )
-                for dish in dishes
-            }
-        except Exception:
-            raw_importance = {dish: 1.0 for dish in dishes}
-    else:
-        raw_importance = {dish: feature_importance.get(dish, 0.0) for dish in dishes}
-    importance_total = sum(raw_importance.values())
-    if importance_total == 0:
-        importance_total = float(len(dishes))
-        raw_importance = {dish: 1.0 for dish in dishes}
-    catalog_dishes = set(DEFAULT_MENU)
-    for cached_menu in menu_cache.values():
-        catalog_dishes.update(cached_menu)
-    contributors = []
-    for dish, value in raw_importance.items():
-        share = value / importance_total * 100
-        category = classify_dish(dish)
-        alternative_available = any(
-            candidate not in dishes and classify_dish(candidate) == category
-            for candidate in catalog_dishes
-        )
-        contributors.append(
-            {
-                "menu": dish,
-                "importance": round(share, 1),
-                "level": "high" if share >= 40 else "medium" if share >= 20 else "low",
-                "alternative_available": alternative_available,
-            }
-        )
-    contributors.sort(key=lambda item: item["importance"], reverse=True)
     return jsonify(
         {
             "prediction": round(base, 2),
             "delta": round(base - average, 2),
-            "contributors": contributors,
             "model_version": training.get("active_model", "model_1"),
             "note": f"{meal}의 실제 기록 평균 {average:.1f}kg과 메뉴 조합을 함께 비교한 모델 추정값입니다.",
-        }
-    )
-
-
-@app.post("/api/alternative")
-def alternative():
-    payload = request.get_json(silent=True) or {}
-    meal = payload.get("meal")
-    dishes = list(dict.fromkeys(payload.get("dishes", [])))
-    target = payload.get("target")
-    if meal not in MEAL_CODES or target not in dishes:
-        return jsonify({"error": "대체할 메뉴를 확인해 주세요."}), 400
-    base_prediction = predict_value(meal, dishes)
-    target_category = classify_dish(target)
-    catalog_dishes = set(DEFAULT_MENU)
-    for cached_menu in menu_cache.values():
-        catalog_dishes.update(cached_menu)
-    candidates = sorted(
-        dish
-        for dish in catalog_dishes
-        if dish != target
-        and dish not in dishes
-        and classify_dish(dish) == target_category
-    )[:40]
-    best = None
-    for candidate in candidates:
-        replaced = [candidate if dish == target else dish for dish in dishes]
-        candidate_prediction = predict_value(meal, replaced)
-        if best is None or candidate_prediction < best["prediction"]:
-            best = {"menu": candidate, "prediction": candidate_prediction}
-    if best is None:
-        return jsonify({"error": "같은 카테고리에서 비교할 대체 메뉴가 없습니다."}), 404
-    return jsonify(
-        {
-            "target": target,
-            "alternative": best["menu"],
-            "current_prediction": round(base_prediction, 2),
-            "alternative_prediction": round(best["prediction"], 2),
-            "reduction": round(base_prediction - best["prediction"], 2),
-            "category": target_category,
         }
     )
 

@@ -8,7 +8,7 @@ function readFavorites() {
   }
 }
 
-const state = { meal: '중식', menu: [], categories: {}, groups: {}, popular: {}, favorites: new Set(readFavorites()), activeCategory: '밥류', search: '', basePrediction: null, lastResult: null, lastPrediction: null, scenarioA: null, scenarioB: null, alternative: null, recommendedDish: null, autoPredictTimer: null };
+const state = { meal: '중식', menu: [], categories: {}, groups: {}, popular: {}, favorites: new Set(readFavorites()), activeCategory: '밥류', search: '', basePrediction: null, lastResult: null, lastPrediction: null, scenarioA: null, scenarioB: null, autoPredictTimer: null };
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
@@ -187,10 +187,6 @@ function clearPredictionDisplay() {
   $('#predictionValue').innerHTML = '--<small> kg</small>';
   $('#averageDelta').textContent = '--';
   $('#predictionNote').textContent = '식단을 구성하면 예상 잔반량을 확인할 수 있습니다.';
-  $('#contributors').innerHTML = '<span class="contributor-empty">메뉴를 구성하면 메뉴별 기여도를 분석합니다.</span>';
-  state.recommendedDish = null;
-  $('#smartRecommendationButton').disabled = true;
-  $('#smartRecommendationText').textContent = '식단을 구성하면 대체 가능한 메뉴를 확인할 수 있습니다.';
   updateTargetVisual(null);
   updateKpis(null);
 }
@@ -222,42 +218,6 @@ function loadPopularTemplate() {
   renderChosen();
   clearPredictionDisplay();
   scheduleAutoPrediction();
-}
-
-function renderContributors(contributors) {
-  $('#contributors').innerHTML = contributors.map((item) => `<div class="contributor-row"><span class="signal ${item.level}" aria-label="${item.level}"></span><strong>${escapeHtml(item.menu)}</strong><div class="contributor-bar"><i style="width:${Math.max(4, item.importance)}%"></i></div><small>${item.importance.toFixed(1)}%</small>${item.alternative_available ? `<button class="contributor-action" type="button" data-alternative="${escapeHtml(item.menu)}">대체</button>` : '<span class="contributor-no-alternative">대체 없음</span>'}</div>`).join('');
-  const recommendation = contributors.find((item) => item.alternative_available);
-  state.recommendedDish = recommendation?.menu || null;
-  $('#smartRecommendationButton').disabled = !state.recommendedDish;
-  $('#smartRecommendationText').textContent = recommendation
-    ? `${recommendation.menu}의 잔반 기여도가 높습니다. 다른 메뉴 구성을 살펴보세요.`
-    : '현재 식단에서 비교할 수 있는 대체 메뉴가 없습니다.';
-  $$('.contributor-action').forEach((button) => button.addEventListener('click', () => openAlternative(button.dataset.alternative)));
-}
-
-async function openAlternative(dish) {
-  const modal = $('#alternativeModal');
-  $('#alternativeCurrent').textContent = dish;
-  $('#alternativeName').textContent = '계산 중...';
-  $('#alternativeCurrentValue').textContent = `${state.lastPrediction?.toFixed(2) || '--'} kg`;
-  $('#alternativeValue').textContent = '-- kg';
-  modal.hidden = false;
-  try {
-    const response = await fetch('/api/alternative', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ meal:state.meal, dishes:state.menu, target:dish }) });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error);
-    state.alternative = result;
-    $('#alternativeName').textContent = result.alternative;
-    $('#alternativeCurrentValue').textContent = `${result.current_prediction.toFixed(2)} kg`;
-    $('#alternativeValue').textContent = `${result.alternative_prediction.toFixed(2)} kg`;
-    $('#alternativeText').textContent = result.reduction > 0 ? `${result.alternative}로 변경하면 예상 잔반량이 ${result.reduction.toFixed(2)}kg 줄어듭니다.` : '현재 모델에서는 예상 잔반량이 크게 줄지 않는 대안입니다.';
-    $('#smartRecommendationText').textContent = result.reduction > 0
-      ? `${dish} 대신 ${result.alternative}(으)로 바꾸면 약 ${result.reduction.toFixed(1)}kg 줄어들 수 있습니다.`
-      : `${result.alternative} 메뉴를 대안으로 비교했습니다. 실제 결과를 확인해 주세요.`;
-  } catch (error) {
-    $('#alternativeName').textContent = '대안 없음';
-    $('#alternativeText').textContent = error.message || '같은 카테고리에서 비교할 메뉴가 없습니다.';
-  }
 }
 
 function updateScenarioPanel() {
@@ -394,7 +354,6 @@ async function predict(force = false) {
     state.basePrediction = result.prediction;
     state.lastResult = result;
     $('#saveScenarioBButton').disabled = !state.scenarioA;
-    renderContributors(result.contributors || []);
     updateAdjustedPrediction();
   } catch (error) { $('#predictionNote').textContent = '예측 서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.'; }
   $('#predictButton').disabled = false; $('#predictButton span').textContent = '예상 잔반량 확인';
@@ -416,11 +375,10 @@ function localizeInterface() {
   $('.eyebrow').textContent = '영양교사 업무 지원';
   $('.api-state').textContent = '메뉴 불러오는 중';
   $$('.section-kicker').forEach((label, index) => {
-    label.textContent = ['식단 편성', '잔반 산정', '운영 통계', '예측 참고', '대체 메뉴 검토'][index] || '';
+    label.textContent = ['식단 편성', '잔반 산정', '운영 통계', '예측 참고'][index] || '';
   });
   $('#menuSearch').placeholder = '메뉴명 또는 초성을 입력하세요';
   $('.live-pill').textContent = '기준 결과';
-  $('.contributor-head > span').textContent = '메뉴별 잔반 영향';
   $('.stat-number span').innerHTML = 'kg<br />평균 오차';
   $$('.stat-row b')[1].textContent = '랜덤 포레스트';
   $('#saveScenarioButton').textContent = '식단안 A 저장';
@@ -429,11 +387,7 @@ function localizeInterface() {
 }
 
 function installDashboardExtras() {
-  const recommendation = document.createElement('section');
-  recommendation.className = 'smart-recommendation';
-  recommendation.innerHTML = '<span class="idea-mark" aria-hidden="true">→</span><p id="smartRecommendationText">메뉴를 구성하면 확인할 수 있는 대체 메뉴를 표시합니다.</p><button id="smartRecommendationButton" type="button" disabled>대안 확인</button>';
-  $('.contributor-block').insertAdjacentElement('afterend', recommendation);
-
+  $('.contributor-block')?.remove();
   const compareButton = document.createElement('button');
   compareButton.id = 'compareAnalysisButton';
   compareButton.type = 'button';
@@ -464,16 +418,12 @@ $('#predictButton').addEventListener('click', () => predict(false));
 $('#forcePredict').addEventListener('click', () => predict(true));
 $('#targetWaste').addEventListener('input', () => state.lastResult ? updateAdjustedPrediction() : updateTargetVisual(null));
 $('#popularTemplateButton').addEventListener('click', loadPopularTemplate);
-$('#smartRecommendationButton').addEventListener('click', () => { if (state.recommendedDish) openAlternative(state.recommendedDish); });
 $('#compareAnalysisButton').addEventListener('click', () => { if (state.scenarioA && state.scenarioB) $('#comparePanel').hidden = false; });
 $('#saveScenarioButton').addEventListener('click', () => { if (state.lastPrediction == null) return; state.scenarioA = { prediction: state.lastPrediction, menu: [...state.menu], meal: state.meal }; updateScenarioPanel(); clearSelectedMenu(); });
 $('#saveScenarioBButton').addEventListener('click', saveScenarioB);
 $('#impactPeriod').addEventListener('change', updateImpact);
 $$('.compare-tab').forEach((tab) => tab.addEventListener('click', () => { $$('.compare-tab').forEach((item) => item.classList.toggle('active', item === tab)); loadScenario(tab.dataset.scenario === 'a' ? state.scenarioA : state.scenarioB); }));
-$('#closeAlternative').addEventListener('click', () => { $('#alternativeModal').hidden = true; });
-$('#alternativeModal').addEventListener('click', (event) => { if (event.target.id === 'alternativeModal') $('#alternativeModal').hidden = true; });
 $('#closeCompare').addEventListener('click', () => { $('#comparePanel').hidden = true; });
 $('#comparePanel').addEventListener('click', (event) => { if (event.target.id === 'comparePanel') $('#comparePanel').hidden = true; });
-$('#applyAlternative').addEventListener('click', () => { if (!state.alternative) return; state.menu = state.menu.map((dish) => dish === state.alternative.target ? state.alternative.alternative : dish); $('#alternativeModal').hidden = true; renderChosen(); predict(false); });
 updateTargetVisual(null); updateKpis(null);
 loadCatalog(); loadReports();
