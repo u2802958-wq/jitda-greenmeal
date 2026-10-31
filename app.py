@@ -12,20 +12,16 @@ import joblib
 import pandas as pd
 import requests
 from flask import Flask, jsonify, request, send_from_directory
-from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import MultiLabelBinarizer
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 MODEL_DIR = BASE_DIR / "models"
 MODEL_1_FILE = MODEL_DIR / "model_1.joblib"
 MODEL_2_FILE = MODEL_DIR / "model_2.joblib"
-MODEL_2_SPEC_FILE = MODEL_DIR / "model_2.json"
 ACTIVE_MODEL_FILE = MODEL_DIR / "active_model.json"
 CACHE_FILE = DATA_DIR / "menu_cache.json"
 NEIS_URL = "https://open.neis.go.kr/hub/mealServiceDietInfo"
@@ -35,15 +31,6 @@ SCHOOL_ID = "9010081"
 MEAL_CODES = {"조식": "1", "중식": "2", "석식": "3"}
 CARBON_FACTOR = 2.5
 COST_PER_KG = 3000
-MODEL_2_DATE_COLUMNS = [
-    "year_trend",
-    "month_sin",
-    "month_cos",
-    "weekday_sin",
-    "weekday_cos",
-    "year_cycle_sin",
-    "year_cycle_cos",
-]
 DEFAULT_MENU = [
     "쌀밥",
     "잡곡밥",
@@ -157,12 +144,15 @@ app = Flask(__name__, static_folder=None)
 lock = threading.RLock()
 training = {
     "ready": False,
-    "status": "모델 준비 중",
+    "status": "기본 모델",
     "active_model": "model_1",
     "rows": 0,
     "menu_features": 0,
     "mae": 0.0,
 }
+model = None
+feature_columns = []
+feature_importance = {}
 model_registry = {}
 model_errors = {}
 menu_cache = {}
