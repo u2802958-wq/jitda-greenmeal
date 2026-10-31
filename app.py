@@ -176,12 +176,27 @@ def save_cache():
 
 
 def load_waste():
-    frame = pd.read_csv(DATA_DIR / "waste.csv", encoding="utf-8-sig")
-    frame.columns = ["date", "meal", "waste"]
-    frame = frame.dropna().copy()
-    frame["date"] = pd.to_datetime(frame["date"]).dt.strftime("%Y-%m-%d")
-    frame["waste"] = frame["waste"].astype(float)
-    return frame
+    raw = pd.read_csv(DATA_DIR / "waste.csv", encoding="utf-8-sig")
+    if {"일자", "끼니", "환산 무게(kg)"}.issubset(raw.columns):
+        frame = raw[["일자", "끼니", "환산 무게(kg)"]].rename(
+            columns={"일자": "date", "끼니": "meal", "환산 무게(kg)": "waste"}
+        )
+    elif {"일자", "끼니", "발생량(kg/L)"}.issubset(raw.columns):
+        frame = raw[["일자", "끼니", "발생량(kg/L)"]].rename(
+            columns={"일자": "date", "끼니": "meal", "발생량(kg/L)": "waste"}
+        )
+    else:
+        raise ValueError("waste.csv에 일자, 끼니, 잔반 무게 열이 필요합니다.")
+
+    frame["date"] = pd.to_datetime(frame["date"], errors="coerce")
+    frame["waste"] = pd.to_numeric(frame["waste"], errors="coerce")
+    frame = frame.dropna(subset=["date", "meal", "waste"])
+    frame = frame[frame["waste"] >= 0].copy()
+    q1, q3 = frame["waste"].quantile([0.25, 0.75])
+    iqr = q3 - q1
+    frame = frame[frame["waste"].between(q1 - 1.5 * iqr, q3 + 1.5 * iqr)].copy()
+    frame["date"] = frame["date"].dt.strftime("%Y-%m-%d")
+    return frame.reset_index(drop=True)
 
 
 waste_df = load_waste()

@@ -352,6 +352,7 @@ function localizeInterface() {
   document.title = '학교급식 잔반 관리';
   $('.eyebrow').textContent = '영양교사 업무 지원';
   $('.api-state').textContent = '메뉴 불러오는 중';
+  $('.report-period').textContent = '2023–2025 실제 환산 무게';
   $$('.section-kicker').forEach((label, index) => {
     label.textContent = ['식단 편성', '잔반 산정', '운영 통계', '예측 참고'][index] || '';
   });
