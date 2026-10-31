@@ -415,11 +415,7 @@ def predict_value(meal, dishes):
     global model_4_error, model_4_failed
     if active_model_name() == "model_4":
         try:
-            features = pd.DataFrame([{"끼니": meal, "메뉴": " ".join(dishes)}])
-            result = float(np.asarray(model_4.predict(features)).reshape(-1)[0])
-            if not np.isfinite(result):
-                raise ValueError("model_4 returned a non-finite prediction")
-            return max(0.0, result)
+            return predict_model_4_raw(meal, dishes)
         except Exception as error:
             model_4_error = str(error)
             model_4_failed = True
@@ -427,6 +423,14 @@ def predict_value(meal, dishes):
     with lock:
         frame = model_1_frame(meal, dishes, feature_columns)
         return max(0.0, float(model.predict(frame)[0]))
+
+
+def predict_model_4_raw(meal, dishes):
+    features = pd.DataFrame([{"끼니": meal, "메뉴": " ".join(dishes)}])
+    result = float(np.asarray(model_4.predict(features)).reshape(-1)[0])
+    if not np.isfinite(result):
+        raise ValueError("model_4 returned a non-finite prediction")
+    return max(0.0, result)
 
 
 def background_sync():
@@ -445,7 +449,7 @@ def background_sync():
 
 load_cache()
 train_model()
-load_model_3()
+load_model_4()
 if API_KEY and len(records_with_menu()) < len(waste_df) * 0.8:
     threading.Thread(target=background_sync, daemon=True).start()
 
@@ -543,7 +547,21 @@ def predict():
             ), 400
     base = predict_value(meal, dishes)
     average = float(waste_df[waste_df["meal"] == meal]["waste"].mean())
-    raw_importance = {dish: feature_importance.get(dish, 0.0) for dish in dishes}
+    if training.get("active_model") == "model_4":
+        try:
+            raw_importance = {
+                dish: abs(
+                    base
+                    - predict_model_4_raw(
+                        meal, [candidate for candidate in dishes if candidate != dish]
+                    )
+                )
+                for dish in dishes
+            }
+        except Exception:
+            raw_importance = {dish: 1.0 for dish in dishes}
+    else:
+        raw_importance = {dish: feature_importance.get(dish, 0.0) for dish in dishes}
     importance_total = sum(raw_importance.values())
     if importance_total == 0:
         importance_total = float(len(dishes))
@@ -573,6 +591,7 @@ def predict():
             "prediction": round(base, 2),
             "delta": round(base - average, 2),
             "contributors": contributors,
+            "model_version": training.get("active_model", "model_1"),
             "note": f"{meal}의 실제 기록 평균 {average:.1f}kg과 메뉴 조합을 함께 비교한 모델 추정값입니다.",
         }
     )
@@ -620,6 +639,7 @@ def alternative():
 
 @app.get("/api/overview")
 def overview():
+    update_active_model_status()
     meals = [
         {
             "meal": meal,
@@ -632,7 +652,8 @@ def overview():
             "rows": len(waste_df),
             "trained_rows": training["rows"],
             "menu_features": training["menu_features"],
-            "mae": training["mae"] or 1.82,
+            "mae": training["mae"] if training["active_model"] == "model_1" else None,
+            "model_version": training["active_model"],
             "max_average": max(item["average"] for item in meals),
             "meals": meals,
         }
@@ -641,6 +662,7 @@ def overview():
 
 @app.get("/api/training-status")
 def training_status():
+    update_active_model_status()
     return jsonify(training)
 
 

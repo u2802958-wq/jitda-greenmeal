@@ -405,7 +405,7 @@ async function loadReports() {
     const response = await fetch('/api/overview'); const data = await response.json();
     if ($('#dataRows')) $('#dataRows').textContent = data.rows;
     if ($('#trainedRows')) $('#trainedRows').textContent = `${data.trained_rows}건`;
-    if ($('#maeValue')) $('#maeValue').textContent = data.mae.toFixed(2);
+    if ($('#maeValue')) $('#maeValue').textContent = Number.isFinite(data.mae) ? data.mae.toFixed(2) : '--';
     if ($('#featureCount')) $('#featureCount').textContent = data.menu_features ? `끼니 + ${data.menu_features}개 메뉴` : '끼니 기준 기본 모델';
     $('#mealBars').innerHTML = data.meals.map((meal) => `<div class="bar-group"><span class="bar-value">${meal.average.toFixed(1)}</span><div class="bar" style="--height:${Math.max(25, meal.average / data.max_average * 100)}%"></div><span class="bar-label">${meal.meal}</span></div>`).join('');
   } catch (error) { $('#mealBars').innerHTML = '<span class="bar-loading">리포트를 불러오지 못했습니다.</span>'; }
