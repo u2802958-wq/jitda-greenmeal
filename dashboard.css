@@ -200,7 +200,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .bar-chart { display: flex; min-height: 150px; align-items: end; justify-content: space-around; gap: 18px; padding: 16px 14px 3px; }
 .bar-group { display: flex; width: 50px; height: 118px; flex-direction: column; align-items: center; justify-content: end; gap: 5px; }
 .bar-value { color: #51686c; font-size: 10px; font-weight: 600; }
-.bar { width: 28px; height: var(--height); min-height: 16px; border-radius: 5px 5px 2px 2px; background: linear-gradient(180deg, #38b2a4, #0d9488); }
+.bar { width: 28px; height: var(--height); min-height: 16px; border-radius: 5px 5px 2px 2px; background: #0d9488; }
 .bar-label { color: #66777d; font-size: 10px; }
 .stat-card .stat-number { display: flex; align-items: end; gap: 8px; margin: 10px 0; }
 .stat-number strong { color: var(--teal-dark); font-size: 30px; line-height: 1; }
