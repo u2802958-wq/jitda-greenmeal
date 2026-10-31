@@ -48,8 +48,17 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .risk-badge { border-radius: 4px; }
 .risk-badge i { box-shadow: none; }
 
-.forecast-grid { grid-template-columns: minmax(0, 1.12fr) minmax(350px, .88fr); gap: 16px; }
-.forecast-grid > .kpi-grid { grid-column: 1 / -1; margin: 0; }
+.forecast-grid { grid-template-columns: minmax(0, 1.12fr) minmax(350px, .88fr); grid-template-rows: auto auto; gap: 14px 16px; }
+.forecast-grid > .planner-panel { grid-column: 1; grid-row: 1 / span 2; }
+.forecast-grid > .result-panel { grid-column: 2; grid-row: 1; }
+.forecast-grid > .kpi-grid { display: flex; grid-column: 2; grid-row: 2; flex-direction: column; gap: 7px; margin: 0; }
+.forecast-grid > .kpi-grid .kpi-card { display: grid; grid-template-columns: minmax(112px, .8fr) minmax(0, 1.2fr); grid-template-rows: auto auto; align-items: center; min-height: 54px; padding: 8px 12px; }
+.forecast-grid > .kpi-grid .kpi-label { grid-column: 1; grid-row: 1; margin: 0; font-size: 11px; }
+.forecast-grid > .kpi-grid .kpi-main { grid-column: 2; grid-row: 1 / span 2; min-height: 0; align-items: center; flex-direction: row; gap: 8px; }
+.forecast-grid > .kpi-grid .kpi-value { font-size: 21px; }
+.forecast-grid > .kpi-grid .kpi-value small { font-size: 11px; }
+.forecast-grid > .kpi-grid .kpi-delta { padding: 4px 6px; font-size: 9px; }
+.forecast-grid > .kpi-grid .kpi-card p { grid-column: 1; grid-row: 2; margin: 1px 0 0; font-size: 9px; }
 .panel, .report-section { border: 1px solid #d4dce2; border-radius: 4px; background: #fff; box-shadow: none; }
 .panel { padding: 19px; }
 .panel-top, .section-heading { border-bottom-color: #e1e6ea; }
@@ -144,7 +153,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .apply-alternative { border-radius: 3px; background: #174f68; }
 
 @media (max-width: 980px) {
-  .forecast-grid { grid-template-columns: minmax(0, 1fr); }
+  .forecast-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .forecast-grid > .planner-panel, .forecast-grid > .result-panel, .forecast-grid > .kpi-grid { grid-column: 1; grid-row: auto; }
 }
 
 @media (max-width: 760px) {
