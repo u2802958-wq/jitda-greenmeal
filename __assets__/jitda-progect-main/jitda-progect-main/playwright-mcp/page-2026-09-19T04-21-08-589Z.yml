@@ -1,0 +1,176 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "그린밀 기획서 처음으로" [ref=e3] [cursor=pointer]:
+      - /url: "#top"
+      - generic [ref=e8]:
+        - text: 그린밀
+        - generic [ref=e9]: PROJECT BRIEF
+    - generic [ref=e10]:
+      - generic [ref=e11]: 기획 단계
+      - button "PDF로 저장" [ref=e13] [cursor=pointer]: PDF로 저장 ↗
+  - main [ref=e14]:
+    - complementary "문서 목차" [ref=e15]:
+      - paragraph [ref=e16]: 2025 / SCHOOL FOOD
+      - link "01 무엇을 만들까" [ref=e18] [cursor=pointer]:
+        - /url: "#overview"
+      - link "02 어디까지 만들까" [ref=e19] [cursor=pointer]:
+        - /url: "#scope"
+      - link "03 예상 화면" [ref=e20] [cursor=pointer]:
+        - /url: "#prototype"
+      - generic [ref=e21]:
+        - generic [ref=e22]: ↘
+        - text: 메뉴를 바꾸기 전에
+        - text: 잔반을 먼저 생각합니다.
+    - article [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: 기획서 / PROJECT BRIEF
+          - heading "남길 양을 미리 줄이는 급식" [level=1] [ref=e27]:
+            - text: 남길 양을
+            - emphasis [ref=e28]: 미리 줄이는
+            - text: 급식
+          - paragraph [ref=e29]:
+            - text: 메뉴를 고르면, 그날의 잔반량이 보입니다.
+            - text: 더 나은 발주는 맛을 포기하는 일이 아니라 낭비를 줄이는 일입니다.
+        - generic "프로젝트 번호" [ref=e30]: 01/08
+      - region "프로젝트 기본 정보" [ref=e31]:
+        - generic [ref=e32]: 프로젝트 이름
+        - generic [ref=e33]: 그린밀 — 급식 잔반 예측기
+        - generic [ref=e34]: 팀 이름
+        - generic [ref=e35]: 팀 그린스푼
+        - generic [ref=e36]: 팀원
+        - generic [ref=e37]: 이름을 입력해 주세요
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: "01"
+          - heading "무엇을 만들까" [level=2] [ref=e41]
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]: 사용자와 상황
+            - generic [ref=e46]:
+              - generic [ref=e47]: 누가, 어떤 상황에서 쓰나요?
+              - text: 고등학교 영양사 선생님이 다음 급식 식단을 구성하고 발주하기 전에 사용합니다. 조식·중식·석식별 메뉴 조합을 미리 비교해 볼 수 있습니다.
+          - generic [ref=e48]:
+            - generic [ref=e49]: 문제
+            - generic [ref=e50]:
+              - generic [ref=e51]: 그 사람이 겪는 불편을 한 줄로
+              - text: 잔반이 많이 나올 식단을 미리 알기 어려워 필요 이상으로 식재료를 주문하고, 처리 과정에서 추가 작업과 탄소 배출이 발생합니다.
+          - generic [ref=e52]:
+            - generic [ref=e53]: 해결 방법
+            - generic [ref=e54]:
+              - generic [ref=e55]: 무엇을 하면 그 불편이 줄어드나요?
+              - text: 메뉴를 카테고리별로 선택하면 끼니 시간대와 메뉴 조합을 학습한 AI가 예상 잔반량을 kg 단위로 보여줍니다. 예상량을 참고해 발주량을 조정합니다.
+          - generic [ref=e56]:
+            - generic [ref=e57]: 제품
+            - generic [ref=e58]:
+              - generic [ref=e59]: "만들 것을 한 줄로 (예: 웹사이트, 게임)"
+              - text: 메뉴 선택형 AI 급식 잔반량 예측 웹사이트
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]: "02"
+          - heading "어디까지 만들까" [level=2] [ref=e63]
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]: A
+              - heading "요구사항" [level=3] [ref=e69]
+            - paragraph [ref=e70]: AI가 구현해야 할 행동과 결과
+            - list [ref=e71]:
+              - listitem [ref=e72]:
+                - generic [ref=e73]: "01"
+                - text: 잔반량 데이터를
+                - strong [ref=e74]: RandomForestRegressor
+                - text: 모델로 학습한다.
+              - listitem [ref=e75]:
+                - generic [ref=e76]: "02"
+                - text: 사용자가 끼니와 메뉴를 선택하면 메뉴 조합의 예상 잔반량을 kg 단위로 출력한다.
+              - listitem [ref=e77]:
+                - generic [ref=e78]: "03"
+                - text: 메뉴명을 직접 입력하지 않고 카테고리별 버튼으로 추가·삭제할 수 있게 한다.
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - generic [ref=e81]: B
+              - heading "검증 조건" [level=3] [ref=e82]
+            - paragraph [ref=e83]: 실행해 보고 확인할 수 있는 조건
+            - list [ref=e84]:
+              - listitem [ref=e85]:
+                - generic [ref=e86]: "01"
+                - text: 조식·중식·석식을 바꾸면 같은 메뉴라도 예상 잔반량이 달라진다.
+              - listitem [ref=e87]:
+                - generic [ref=e88]: "02"
+                - text: 메뉴를 추가하거나 빼면 예상량과 분석 문구가 즉시 바뀐다.
+              - listitem [ref=e89]:
+                - generic [ref=e90]: "03"
+                - text: 등록되지 않은 메뉴나 오타 없이 정해진 메뉴만 선택된다.
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - text: 데이터
+            - paragraph [ref=e93]:
+              - text: 2025년 우리 학교 끼니별 실제 잔반량(kg) 데이터와
+              - strong [ref=e94]: 나이스 급식식단정보 API
+              - text: 의 메뉴·식단 정보를 사용합니다. 외부 요인은 후처리하고 메뉴·끼니 중심으로 학습합니다.
+            - generic [ref=e95]:
+              - generic [ref=e96]: 2025 잔반량 CSV
+              - generic [ref=e97]: 나이스 API
+              - generic [ref=e98]: 끼니 3종
+          - generic [ref=e99]:
+            - text: 개발 범위
+            - generic [ref=e100]:
+              - generic [ref=e101]: 포함
+              - paragraph [ref=e102]: 메뉴 선택, 끼니 구분, AI 예측 결과, 예상량 비교 화면
+            - generic [ref=e103]:
+              - generic [ref=e104]: 제외
+              - paragraph [ref=e105]: 절대 조리량 계산, 자동 발주·구매, 날씨 등 외부 요인 예측
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - paragraph [ref=e108]: 03 / QUICK PROTOTYPE
+          - heading "이렇게 작동합니다" [level=2] [ref=e109]
+          - paragraph [ref=e110]: 실제 제품에서 영양사 선생님이 보게 될 핵심 흐름을 미리 확인해 보세요.
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]: GREEMEAL / MENU SIMULATOR
+            - generic [ref=e114]: 3가지 메뉴 선택됨
+          - generic [ref=e115]:
+            - generic [ref=e116]:
+              - text: 오늘 예측할 끼니
+              - heading "중식" [level=3] [ref=e117]
+            - generic [ref=e118]:
+              - generic [ref=e119]: 예상 잔반량
+              - strong [ref=e120]: 11.8 kg
+              - emphasis [ref=e121]: 평균보다 0.8kg 낮음
+          - tablist "끼니 선택" [ref=e122]:
+            - button "조식" [ref=e123] [cursor=pointer]
+            - button "중식" [ref=e124] [cursor=pointer]
+            - button "석식" [ref=e125] [cursor=pointer]
+          - generic [ref=e126]:
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - generic [ref=e129]: 주식
+                - generic [ref=e130]:
+                  - button "쌀밥 ✓" [ref=e131] [cursor=pointer]
+                  - button "김치볶음밥 +" [ref=e132] [cursor=pointer]
+              - generic [ref=e133]:
+                - generic [ref=e134]: 국·찌개
+                - generic [ref=e135]:
+                  - button "된장국 ✓" [ref=e136] [cursor=pointer]
+                  - button "미역국 +" [ref=e137] [cursor=pointer]
+              - generic [ref=e138]:
+                - generic [ref=e139]: 반찬
+                - generic [ref=e140]:
+                  - button "닭갈비 ✓" [ref=e141] [cursor=pointer]
+                  - button "두부조림 +" [ref=e142] [cursor=pointer]
+                  - button "시금치나물 +" [ref=e143] [cursor=pointer]
+              - generic [ref=e144]:
+                - generic [ref=e145]: 후식
+                - generic [ref=e146]:
+                  - button "사과 +" [ref=e147] [cursor=pointer]
+                  - button "요구르트 +" [ref=e148] [cursor=pointer]
+            - generic [ref=e149]:
+              - text: MODEL INSIGHT
+              - paragraph [ref=e150]: 현재 조합은 선호도가 높은 주식과 반찬으로 구성되어 예상 잔반량이 안정적입니다.
+              - generic [ref=e151]:
+                - generic [ref=e152]: 예측 신뢰도
+                - strong [ref=e155]: 82%
+      - generic [ref=e156]:
+        - generic [ref=e157]: GREEMEAL / PROJECT BRIEF
+        - generic [ref=e158]: 메뉴에서 시작하는 탄소 저감

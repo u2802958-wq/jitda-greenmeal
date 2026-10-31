@@ -1,0 +1,6 @@
+{
+  "model_name": "model_1",
+  "algorithm": "RandomForestRegressor",
+  "preprocessing": "기존 메뉴 이진 특성 + 끼니 원-핫 인코딩",
+  "rollback": "active_model.json에서 active_model을 model_1로 변경"
+}

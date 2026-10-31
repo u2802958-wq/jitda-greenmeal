@@ -1,0 +1,3137 @@
+{
+  "artifact_type": "regression_model_spec_and_evaluation",
+  "format_version": 1,
+  "rank_by_test_rmse": 1,
+  "model_name": "RandomForest",
+  "target": {
+    "column": "환산 무게(kg)",
+    "unit": "kg",
+    "transform": "원형"
+  },
+  "features": [
+    "일자 파생(연도 추세, 월/요일/연중 주기)",
+    "끼니",
+    "급식 메뉴(NEIS DDISH_NM TF-IDF)"
+  ],
+  "excluded_from_features": [
+    "환산 무게(kg)",
+    "원자료 발생량(L)",
+    "이상값 확인",
+    "원본 파일"
+  ],
+  "preprocessing": {
+    "categorical": "OneHotEncoder(handle_unknown=ignore)",
+    "date_numeric": "StandardScaler",
+    "menu": "TF-IDF, max_features=3000, ngram_range=[1,2]"
+  },
+  "best_params": {
+    "max_features": 0.7,
+    "min_samples_leaf": 4,
+    "n_estimators": 600
+  },
+  "metrics_kg": {
+    "cv_rmse": 1.4647672802734113,
+    "test_rmse": 1.4555264072754657,
+    "test_mae": 1.0547849601104915,
+    "test_median_absolute_error": 0.8210634025900534,
+    "test_r2": 0.7884607100499218
+  },
+  "test_predictions": [
+    {
+      "date": "2023-11-29",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.417114821117979
+    },
+    {
+      "date": "2025-09-30",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.82476546716312
+    },
+    {
+      "date": "2023-11-10",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.92516311605062
+    },
+    {
+      "date": "2023-05-18",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 10.172905337535258
+    },
+    {
+      "date": "2024-01-29",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.086578211616815
+    },
+    {
+      "date": "2025-12-27",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.50931575201757
+    },
+    {
+      "date": "2025-11-30",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 10.817695540978622
+    },
+    {
+      "date": "2024-11-23",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.145320015890974
+    },
+    {
+      "date": "2024-09-12",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.724785470167092
+    },
+    {
+      "date": "2025-05-29",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.835722774039679
+    },
+    {
+      "date": "2025-10-23",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.454654222982894
+    },
+    {
+      "date": "2024-03-18",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.081135546193998
+    },
+    {
+      "date": "2024-12-16",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 12.11529665334665
+    },
+    {
+      "date": "2024-09-30",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.785432044426159
+    },
+    {
+      "date": "2024-05-16",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.881543941778041
+    },
+    {
+      "date": "2023-08-10",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.906720310939066
+    },
+    {
+      "date": "2023-05-03",
+      "meal": "석식",
+      "actual_kg": 7.2,
+      "predicted_kg": 9.952384833916087
+    },
+    {
+      "date": "2025-08-05",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.308530973928046
+    },
+    {
+      "date": "2025-09-16",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.18175935669723
+    },
+    {
+      "date": "2024-04-16",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 6.4084787724530345
+    },
+    {
+      "date": "2023-05-31",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.176668140437984
+    },
+    {
+      "date": "2024-06-30",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.121104864498254
+    },
+    {
+      "date": "2025-11-07",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.090980382362739
+    },
+    {
+      "date": "2023-10-16",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.705741816516824
+    },
+    {
+      "date": "2024-04-21",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.918882051282052
+    },
+    {
+      "date": "2025-08-07",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.573839021395253
+    },
+    {
+      "date": "2023-02-05",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.644365574009329
+    },
+    {
+      "date": "2023-02-01",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.4820695845820855
+    },
+    {
+      "date": "2024-10-21",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.653971124341336
+    },
+    {
+      "date": "2024-01-06",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.438046434325482
+    },
+    {
+      "date": "2023-11-05",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.534610177322681
+    },
+    {
+      "date": "2024-03-28",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.79555252455877
+    },
+    {
+      "date": "2024-12-05",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 12.534029635824716
+    },
+    {
+      "date": "2024-10-22",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.318967155883335
+    },
+    {
+      "date": "2023-03-21",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.669436602245796
+    },
+    {
+      "date": "2023-11-12",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.355198894855149
+    },
+    {
+      "date": "2023-10-08",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.4183947427572425
+    },
+    {
+      "date": "2024-07-09",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.05320169961616
+    },
+    {
+      "date": "2023-01-18",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.683349127220816
+    },
+    {
+      "date": "2024-10-04",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.549142357030227
+    },
+    {
+      "date": "2023-05-20",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.366971312021311
+    },
+    {
+      "date": "2023-09-14",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.462185176465695
+    },
+    {
+      "date": "2023-03-20",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.833725742517288
+    },
+    {
+      "date": "2024-11-28",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.92475506540029
+    },
+    {
+      "date": "2025-05-20",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.243355968908546
+    },
+    {
+      "date": "2024-07-01",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.156098089410587
+    },
+    {
+      "date": "2025-09-10",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.298738734672181
+    },
+    {
+      "date": "2024-04-15",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 8.966928999921642
+    },
+    {
+      "date": "2023-09-27",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.127829774637126
+    },
+    {
+      "date": "2025-03-13",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.431865572121383
+    },
+    {
+      "date": "2023-10-04",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.58576334915085
+    },
+    {
+      "date": "2024-08-30",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.856827019059377
+    },
+    {
+      "date": "2025-08-20",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.584054403317264
+    },
+    {
+      "date": "2025-08-05",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.015190260842106
+    },
+    {
+      "date": "2024-04-09",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.061779732767226
+    },
+    {
+      "date": "2023-08-09",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 8.681342687337175
+    },
+    {
+      "date": "2024-04-10",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.146796051007818
+    },
+    {
+      "date": "2025-12-20",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.6082738106256524
+    },
+    {
+      "date": "2024-05-23",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.311505297334243
+    },
+    {
+      "date": "2025-12-30",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 7.755052945461396
+    },
+    {
+      "date": "2025-09-08",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.199582450882455
+    },
+    {
+      "date": "2025-02-20",
+      "meal": "중식",
+      "actual_kg": 8.1,
+      "predicted_kg": 6.8061044821599985
+    },
+    {
+      "date": "2023-02-06",
+      "meal": "석식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.018223798627841
+    },
+    {
+      "date": "2023-08-03",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 6.678591189840856
+    },
+    {
+      "date": "2025-07-10",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.528166606149274
+    },
+    {
+      "date": "2025-05-08",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.590587859199629
+    },
+    {
+      "date": "2025-07-08",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.272145435446912
+    },
+    {
+      "date": "2023-07-16",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.371860499916753
+    },
+    {
+      "date": "2024-12-30",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 9.694064767778663
+    },
+    {
+      "date": "2023-12-21",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 7.681807826119958
+    },
+    {
+      "date": "2024-10-03",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 10.865807700632697
+    },
+    {
+      "date": "2024-07-29",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 6.114921370786069
+    },
+    {
+      "date": "2024-11-09",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.804625421147482
+    },
+    {
+      "date": "2024-03-08",
+      "meal": "석식",
+      "actual_kg": 7.2,
+      "predicted_kg": 9.441303517316015
+    },
+    {
+      "date": "2023-09-25",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.885931712037955
+    },
+    {
+      "date": "2024-02-13",
+      "meal": "조식",
+      "actual_kg": 1.8,
+      "predicted_kg": 3.284785369899707
+    },
+    {
+      "date": "2025-10-31",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.767875396172457
+    },
+    {
+      "date": "2023-11-08",
+      "meal": "중식",
+      "actual_kg": 14.4,
+      "predicted_kg": 11.385139021395275
+    },
+    {
+      "date": "2024-08-06",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.392885725671394
+    },
+    {
+      "date": "2025-02-25",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.997074473443222
+    },
+    {
+      "date": "2025-08-30",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.586419513697091
+    },
+    {
+      "date": "2024-09-07",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 3.7464229031997447
+    },
+    {
+      "date": "2024-04-30",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.910733776640019
+    },
+    {
+      "date": "2024-11-18",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 13.119311450069544
+    },
+    {
+      "date": "2025-06-04",
+      "meal": "중식",
+      "actual_kg": 14.4,
+      "predicted_kg": 9.942662699800202
+    },
+    {
+      "date": "2025-09-15",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.840696926602805
+    },
+    {
+      "date": "2025-03-24",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.670325728438224
+    },
+    {
+      "date": "2023-06-08",
+      "meal": "석식",
+      "actual_kg": 12.6,
+      "predicted_kg": 10.078591556360301
+    },
+    {
+      "date": "2023-06-23",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.373666862181936
+    },
+    {
+      "date": "2024-05-18",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.592025881716323
+    },
+    {
+      "date": "2023-06-18",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.382661363636366
+    },
+    {
+      "date": "2023-03-27",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.374799810116351
+    },
+    {
+      "date": "2023-01-18",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.742592813436568
+    },
+    {
+      "date": "2024-03-09",
+      "meal": "중식",
+      "actual_kg": 2.7,
+      "predicted_kg": 5.062482257081157
+    },
+    {
+      "date": "2024-11-04",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.624629884698633
+    },
+    {
+      "date": "2025-10-26",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 8.159747498212583
+    },
+    {
+      "date": "2023-11-30",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 12.229517582417587
+    },
+    {
+      "date": "2023-09-08",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.650587256493507
+    },
+    {
+      "date": "2024-05-07",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 10.592061869928324
+    },
+    {
+      "date": "2024-04-16",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.343767761405259
+    },
+    {
+      "date": "2025-11-21",
+      "meal": "중식",
+      "actual_kg": 18.9,
+      "predicted_kg": 14.109843210955708
+    },
+    {
+      "date": "2024-01-07",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.818082462880265
+    },
+    {
+      "date": "2023-12-02",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 5.860466387778891
+    },
+    {
+      "date": "2025-03-08",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.837465422322777
+    },
+    {
+      "date": "2024-05-20",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.731474336080582
+    },
+    {
+      "date": "2023-03-16",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.353875029137525
+    },
+    {
+      "date": "2025-06-20",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.310400312432662
+    },
+    {
+      "date": "2024-12-30",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 7.351721291331211
+    },
+    {
+      "date": "2024-07-13",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.237409046713093
+    },
+    {
+      "date": "2024-06-02",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.744886934511571
+    },
+    {
+      "date": "2024-11-10",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.568291369047621
+    },
+    {
+      "date": "2024-11-24",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.604374361545319
+    },
+    {
+      "date": "2024-04-30",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.662232761233858
+    },
+    {
+      "date": "2023-12-31",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.050022600316351
+    },
+    {
+      "date": "2024-12-10",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 7.814023986430245
+    },
+    {
+      "date": "2024-05-09",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.86887765446627
+    },
+    {
+      "date": "2024-03-27",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.121881302031289
+    },
+    {
+      "date": "2023-11-05",
+      "meal": "석식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.5444300749495605
+    },
+    {
+      "date": "2025-05-14",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.586338418379855
+    },
+    {
+      "date": "2023-04-17",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.047125313270316
+    },
+    {
+      "date": "2025-06-13",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.782691358641353
+    },
+    {
+      "date": "2024-08-01",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.722537301791345
+    },
+    {
+      "date": "2025-08-09",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.333014573539213
+    },
+    {
+      "date": "2023-09-19",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.739566750470892
+    },
+    {
+      "date": "2023-03-31",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.28449410589411
+    },
+    {
+      "date": "2025-08-13",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 8.918919739451727
+    },
+    {
+      "date": "2025-03-07",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 10.157873715867462
+    },
+    {
+      "date": "2023-07-24",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 7.073738952713949
+    },
+    {
+      "date": "2025-05-20",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.361789711881253
+    },
+    {
+      "date": "2023-03-26",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 7.136603098984347
+    },
+    {
+      "date": "2025-09-28",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.174154047055886
+    },
+    {
+      "date": "2024-01-08",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.869598289210789
+    },
+    {
+      "date": "2024-01-19",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 3.161111691005071
+    },
+    {
+      "date": "2023-12-26",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.512492272311019
+    },
+    {
+      "date": "2023-11-13",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.367536988011981
+    },
+    {
+      "date": "2024-05-30",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.241084286546782
+    },
+    {
+      "date": "2024-05-11",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.8412150828338305
+    },
+    {
+      "date": "2025-12-03",
+      "meal": "중식",
+      "actual_kg": 14.4,
+      "predicted_kg": 14.487293276105992
+    },
+    {
+      "date": "2025-03-17",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 10.272479937290514
+    },
+    {
+      "date": "2025-03-10",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.174475027599216
+    },
+    {
+      "date": "2023-12-03",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 6.473277196577943
+    },
+    {
+      "date": "2025-07-29",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.300963101114569
+    },
+    {
+      "date": "2024-12-09",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 12.21186087246088
+    },
+    {
+      "date": "2024-04-03",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.780340823759574
+    },
+    {
+      "date": "2024-06-14",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.15447670000923
+    },
+    {
+      "date": "2025-04-26",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 7.425768150599396
+    },
+    {
+      "date": "2023-02-13",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.434162289793546
+    },
+    {
+      "date": "2023-09-26",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 7.457290592740588
+    },
+    {
+      "date": "2024-04-21",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.6633833000332987
+    },
+    {
+      "date": "2023-10-29",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.67118004495505
+    },
+    {
+      "date": "2025-05-31",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 8.672753565919374
+    },
+    {
+      "date": "2023-03-04",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.254769925295296
+    },
+    {
+      "date": "2024-02-28",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.499433806022404
+    },
+    {
+      "date": "2023-07-02",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.3212471778221815
+    },
+    {
+      "date": "2023-08-31",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.991472418139143
+    },
+    {
+      "date": "2024-07-13",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.142819781076767
+    },
+    {
+      "date": "2023-04-06",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.134978490259739
+    },
+    {
+      "date": "2025-12-01",
+      "meal": "조식",
+      "actual_kg": 9.9,
+      "predicted_kg": 8.966900506356383
+    },
+    {
+      "date": "2024-10-01",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 11.696602867965375
+    },
+    {
+      "date": "2025-12-10",
+      "meal": "중식",
+      "actual_kg": 18.0,
+      "predicted_kg": 13.346334904678649
+    },
+    {
+      "date": "2024-07-12",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.782353490259738
+    },
+    {
+      "date": "2025-06-16",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.687824055968543
+    },
+    {
+      "date": "2025-04-02",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.759483280200191
+    },
+    {
+      "date": "2023-03-24",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.719606222821291
+    },
+    {
+      "date": "2023-10-11",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 11.05833951085678
+    },
+    {
+      "date": "2023-08-03",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.70142254608136
+    },
+    {
+      "date": "2024-04-25",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.612026153013637
+    },
+    {
+      "date": "2024-03-24",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.009825791610356
+    },
+    {
+      "date": "2024-11-23",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.042206901921617
+    },
+    {
+      "date": "2023-03-17",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 9.555215320096554
+    },
+    {
+      "date": "2023-08-27",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.177881868550694
+    },
+    {
+      "date": "2023-07-26",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.910964768564778
+    },
+    {
+      "date": "2023-12-21",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.966639935064938
+    },
+    {
+      "date": "2025-10-28",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.131074775836913
+    },
+    {
+      "date": "2024-12-12",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 12.482630186480188
+    },
+    {
+      "date": "2025-06-30",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.44482091033965
+    },
+    {
+      "date": "2024-08-21",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.798194026684103
+    },
+    {
+      "date": "2024-12-27",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.395934213825381
+    },
+    {
+      "date": "2025-11-08",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 7.351482589714203
+    },
+    {
+      "date": "2024-09-12",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.892512000499502
+    },
+    {
+      "date": "2025-11-30",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 5.449065419996667
+    },
+    {
+      "date": "2024-04-02",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.392682995068663
+    },
+    {
+      "date": "2025-11-17",
+      "meal": "중식",
+      "actual_kg": 16.2,
+      "predicted_kg": 14.216854753579753
+    },
+    {
+      "date": "2024-03-11",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.205974440143191
+    },
+    {
+      "date": "2024-02-21",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.171201758535583
+    },
+    {
+      "date": "2025-04-09",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.78063171926112
+    },
+    {
+      "date": "2023-05-01",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.593414127416686
+    },
+    {
+      "date": "2023-04-15",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 3.908900699790403
+    },
+    {
+      "date": "2025-05-01",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.828329983496877
+    },
+    {
+      "date": "2023-03-15",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 9.515327766660587
+    },
+    {
+      "date": "2024-08-22",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.181682303113543
+    },
+    {
+      "date": "2025-08-24",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.057613987360686
+    },
+    {
+      "date": "2024-03-05",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.888250140178444
+    },
+    {
+      "date": "2025-11-04",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.505895519431549
+    },
+    {
+      "date": "2025-07-29",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.484518046536801
+    },
+    {
+      "date": "2024-11-10",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.468357948424132
+    },
+    {
+      "date": "2025-10-21",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.070332457983195
+    },
+    {
+      "date": "2024-12-29",
+      "meal": "조식",
+      "actual_kg": 1.8,
+      "predicted_kg": 4.3610085645971655
+    },
+    {
+      "date": "2024-11-10",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.6073152722277735
+    },
+    {
+      "date": "2024-09-20",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 7.505347399414314
+    },
+    {
+      "date": "2024-05-21",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 9.816024945887435
+    },
+    {
+      "date": "2024-03-29",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.852540419874227
+    },
+    {
+      "date": "2025-09-12",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.18826196719947
+    },
+    {
+      "date": "2024-02-27",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 7.729819432528263
+    },
+    {
+      "date": "2023-02-19",
+      "meal": "중식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.299406227106232
+    },
+    {
+      "date": "2023-04-03",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.746733929305988
+    },
+    {
+      "date": "2025-12-31",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.437853166441391
+    },
+    {
+      "date": "2024-11-24",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.066963145433003
+    },
+    {
+      "date": "2023-11-29",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 12.175161312371836
+    },
+    {
+      "date": "2023-10-23",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 7.585990880932794
+    },
+    {
+      "date": "2024-09-21",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 3.6124647727272787
+    },
+    {
+      "date": "2023-01-30",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.516399475524474
+    },
+    {
+      "date": "2023-04-13",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.472860377367721
+    },
+    {
+      "date": "2024-12-02",
+      "meal": "석식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.778597627495046
+    },
+    {
+      "date": "2024-11-08",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 7.661969685339157
+    },
+    {
+      "date": "2025-03-21",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.348806771537278
+    },
+    {
+      "date": "2025-08-27",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.01611664144679
+    },
+    {
+      "date": "2024-07-05",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 10.554893282575268
+    },
+    {
+      "date": "2024-11-27",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 12.383030296786552
+    },
+    {
+      "date": "2023-05-09",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.664693714863558
+    },
+    {
+      "date": "2024-04-02",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.987508862705914
+    },
+    {
+      "date": "2025-09-07",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 4.753827809690315
+    },
+    {
+      "date": "2025-03-23",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.031319527776155
+    },
+    {
+      "date": "2024-07-20",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 3.6934109434682956
+    },
+    {
+      "date": "2023-04-03",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.419623396559576
+    },
+    {
+      "date": "2024-11-04",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.347126165501162
+    },
+    {
+      "date": "2025-09-27",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.7853555289073717
+    },
+    {
+      "date": "2023-07-26",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.03237485749545
+    },
+    {
+      "date": "2025-04-08",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.333876886593794
+    },
+    {
+      "date": "2024-02-26",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.503860858323822
+    },
+    {
+      "date": "2023-07-13",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 11.146969584582068
+    },
+    {
+      "date": "2025-11-06",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.862134702797198
+    },
+    {
+      "date": "2025-10-17",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.13497998472117
+    },
+    {
+      "date": "2025-02-21",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 6.784796877264894
+    },
+    {
+      "date": "2023-05-10",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.82618885183444
+    },
+    {
+      "date": "2023-06-25",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.306697179291301
+    },
+    {
+      "date": "2023-12-08",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 12.747142154568854
+    },
+    {
+      "date": "2023-04-05",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.041610916025402
+    },
+    {
+      "date": "2025-02-22",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 7.5004989081996385
+    },
+    {
+      "date": "2024-08-25",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.420096530552787
+    },
+    {
+      "date": "2024-06-29",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 3.8052226523476533
+    },
+    {
+      "date": "2023-08-27",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.710944097569101
+    },
+    {
+      "date": "2023-11-23",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 8.152878484015984
+    },
+    {
+      "date": "2023-04-20",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.101817848205713
+    },
+    {
+      "date": "2024-07-02",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.693356883190335
+    },
+    {
+      "date": "2024-04-12",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.82863078215644
+    },
+    {
+      "date": "2024-09-22",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 3.563342517041783
+    },
+    {
+      "date": "2025-09-21",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 8.749484749074455
+    },
+    {
+      "date": "2025-09-01",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.020653296703301
+    },
+    {
+      "date": "2023-05-19",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.82960438507571
+    },
+    {
+      "date": "2024-02-23",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.562955493893363
+    },
+    {
+      "date": "2024-07-10",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.883357072829131
+    },
+    {
+      "date": "2024-04-26",
+      "meal": "석식",
+      "actual_kg": 13.5,
+      "predicted_kg": 9.803676790733773
+    },
+    {
+      "date": "2024-07-03",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.948260872460867
+    },
+    {
+      "date": "2024-08-09",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.88353524331061
+    },
+    {
+      "date": "2025-07-28",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.241816396960883
+    },
+    {
+      "date": "2025-10-13",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.731889584924865
+    },
+    {
+      "date": "2023-09-12",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.706654050116555
+    },
+    {
+      "date": "2023-08-22",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 11.200665660436055
+    },
+    {
+      "date": "2024-03-08",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.954586654766798
+    },
+    {
+      "date": "2024-03-18",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.380600597441772
+    },
+    {
+      "date": "2024-03-24",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.207539679070931
+    },
+    {
+      "date": "2025-08-29",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.855073543123547
+    },
+    {
+      "date": "2025-06-27",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.919411351393698
+    },
+    {
+      "date": "2023-04-21",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 9.468919894566206
+    },
+    {
+      "date": "2023-02-14",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.476774817217106
+    },
+    {
+      "date": "2023-04-19",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.458175440735732
+    },
+    {
+      "date": "2025-05-31",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.33524524788937
+    },
+    {
+      "date": "2024-01-21",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.783619110179036
+    },
+    {
+      "date": "2025-08-20",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.509359532624227
+    },
+    {
+      "date": "2023-08-19",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.62307244422245
+    },
+    {
+      "date": "2024-03-14",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.303574279641918
+    },
+    {
+      "date": "2024-06-17",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.946157909370038
+    },
+    {
+      "date": "2025-04-13",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.242369034152125
+    },
+    {
+      "date": "2025-07-17",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.571710221028981
+    },
+    {
+      "date": "2023-12-19",
+      "meal": "조식",
+      "actual_kg": 9.9,
+      "predicted_kg": 8.047525795772845
+    },
+    {
+      "date": "2023-09-24",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.603952670980981
+    },
+    {
+      "date": "2025-08-06",
+      "meal": "중식",
+      "actual_kg": 8.1,
+      "predicted_kg": 9.06619860849934
+    },
+    {
+      "date": "2025-11-21",
+      "meal": "석식",
+      "actual_kg": 17.1,
+      "predicted_kg": 13.064264110399405
+    },
+    {
+      "date": "2024-12-21",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.445506843156846
+    },
+    {
+      "date": "2025-06-09",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.164466348235095
+    },
+    {
+      "date": "2024-08-06",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.610387745587756
+    },
+    {
+      "date": "2025-08-03",
+      "meal": "석식",
+      "actual_kg": 7.2,
+      "predicted_kg": 8.414661019495222
+    },
+    {
+      "date": "2025-09-21",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.1664249469892845
+    },
+    {
+      "date": "2025-11-19",
+      "meal": "중식",
+      "actual_kg": 16.2,
+      "predicted_kg": 14.63906978793266
+    },
+    {
+      "date": "2023-08-26",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.2245752908082626
+    },
+    {
+      "date": "2024-10-08",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.53122812334724
+    },
+    {
+      "date": "2025-09-15",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.271539989177493
+    },
+    {
+      "date": "2023-12-15",
+      "meal": "중식",
+      "actual_kg": 14.4,
+      "predicted_kg": 12.327684269039791
+    },
+    {
+      "date": "2023-01-14",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.0816823132749573
+    },
+    {
+      "date": "2023-07-05",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.113275110183933
+    },
+    {
+      "date": "2023-12-18",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 12.625511521811529
+    },
+    {
+      "date": "2025-04-07",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.170832915613785
+    },
+    {
+      "date": "2024-06-20",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 6.964646470196458
+    },
+    {
+      "date": "2023-06-09",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.642233347779674
+    },
+    {
+      "date": "2025-06-28",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 7.931359516953633
+    },
+    {
+      "date": "2024-11-13",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 11.177395100732598
+    },
+    {
+      "date": "2023-07-05",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.763490274579649
+    },
+    {
+      "date": "2024-05-08",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.084254144017745
+    },
+    {
+      "date": "2025-08-23",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.18827101856477
+    },
+    {
+      "date": "2025-06-27",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.087514979138514
+    },
+    {
+      "date": "2023-08-06",
+      "meal": "중식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.352546650936783
+    },
+    {
+      "date": "2023-11-03",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 11.994916251028384
+    },
+    {
+      "date": "2023-04-14",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.95035320953556
+    },
+    {
+      "date": "2023-02-18",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.023112949550449
+    },
+    {
+      "date": "2024-09-22",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.430304504319218
+    },
+    {
+      "date": "2024-09-25",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.901898373562719
+    },
+    {
+      "date": "2023-07-01",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.923281143856149
+    },
+    {
+      "date": "2024-10-02",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.281980317173796
+    },
+    {
+      "date": "2023-04-19",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.525885030410764
+    },
+    {
+      "date": "2025-03-04",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.938386565517817
+    },
+    {
+      "date": "2024-12-25",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 6.856581599650349
+    },
+    {
+      "date": "2025-12-01",
+      "meal": "중식",
+      "actual_kg": 16.2,
+      "predicted_kg": 13.901130694305694
+    },
+    {
+      "date": "2025-04-30",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.0848321234493
+    },
+    {
+      "date": "2024-05-20",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.313424469280706
+    },
+    {
+      "date": "2024-06-24",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.87956268670055
+    },
+    {
+      "date": "2025-04-18",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.466085497835495
+    },
+    {
+      "date": "2023-11-27",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.685176758658
+    },
+    {
+      "date": "2024-11-18",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 12.132435926573422
+    },
+    {
+      "date": "2023-06-30",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.199524731518474
+    },
+    {
+      "date": "2023-11-21",
+      "meal": "석식",
+      "actual_kg": 13.5,
+      "predicted_kg": 12.14212746456974
+    },
+    {
+      "date": "2024-06-10",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.260648697136189
+    },
+    {
+      "date": "2023-06-24",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 4.890185928326063
+    },
+    {
+      "date": "2025-06-02",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.994347300003907
+    },
+    {
+      "date": "2024-08-10",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.931775580669334
+    },
+    {
+      "date": "2024-01-26",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.697464312770558
+    },
+    {
+      "date": "2023-08-07",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.056179753579752
+    },
+    {
+      "date": "2024-11-01",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.241604135447876
+    },
+    {
+      "date": "2025-05-15",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.062140442890449
+    },
+    {
+      "date": "2023-12-11",
+      "meal": "중식",
+      "actual_kg": 13.5,
+      "predicted_kg": 12.3740980144855
+    },
+    {
+      "date": "2023-07-14",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.843790517448237
+    },
+    {
+      "date": "2023-06-28",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.341185672538247
+    },
+    {
+      "date": "2025-01-02",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 3.4451243381618375
+    },
+    {
+      "date": "2023-11-11",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.319881108474864
+    },
+    {
+      "date": "2024-10-04",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.139792548015702
+    },
+    {
+      "date": "2023-02-15",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.089925185231438
+    },
+    {
+      "date": "2024-03-20",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.653932335066889
+    },
+    {
+      "date": "2025-06-09",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.911991508491502
+    },
+    {
+      "date": "2023-04-24",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.189335647685638
+    },
+    {
+      "date": "2023-06-16",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.338600671754723
+    },
+    {
+      "date": "2025-06-24",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 9.985634209540441
+    },
+    {
+      "date": "2025-06-04",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.836009542540797
+    },
+    {
+      "date": "2025-12-19",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 12.728482402768803
+    },
+    {
+      "date": "2023-03-21",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 9.808125797976523
+    },
+    {
+      "date": "2024-07-04",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.74552912504163
+    },
+    {
+      "date": "2024-08-04",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.340052418414927
+    },
+    {
+      "date": "2025-01-03",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.796019147519149
+    },
+    {
+      "date": "2024-05-10",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.4351999042624035
+    },
+    {
+      "date": "2024-06-03",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.783446259377867
+    },
+    {
+      "date": "2024-01-09",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.652250187312694
+    },
+    {
+      "date": "2024-01-04",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 6.198527650046035
+    },
+    {
+      "date": "2025-10-26",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.238010772560772
+    },
+    {
+      "date": "2025-02-20",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 3.696979180990573
+    },
+    {
+      "date": "2023-05-04",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.113433378122128
+    },
+    {
+      "date": "2023-03-06",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.920879627357925
+    },
+    {
+      "date": "2023-09-12",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.527990440809187
+    },
+    {
+      "date": "2024-03-29",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.387755380159053
+    },
+    {
+      "date": "2025-09-29",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.140038843876724
+    },
+    {
+      "date": "2023-07-24",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.547960903679652
+    },
+    {
+      "date": "2025-11-23",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 9.943702064234776
+    },
+    {
+      "date": "2023-12-31",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.137147131177647
+    },
+    {
+      "date": "2025-12-04",
+      "meal": "중식",
+      "actual_kg": 16.2,
+      "predicted_kg": 13.968976555919575
+    },
+    {
+      "date": "2023-09-01",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 7.720750144585806
+    },
+    {
+      "date": "2025-06-18",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.110291146965778
+    },
+    {
+      "date": "2023-09-23",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.674638630119882
+    },
+    {
+      "date": "2024-11-03",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.557744407675657
+    },
+    {
+      "date": "2025-04-26",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.5299922428062103
+    },
+    {
+      "date": "2023-04-17",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 9.76265769022644
+    },
+    {
+      "date": "2024-03-12",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.625894536713284
+    },
+    {
+      "date": "2025-11-13",
+      "meal": "조식",
+      "actual_kg": 11.7,
+      "predicted_kg": 9.877056006860785
+    },
+    {
+      "date": "2025-04-20",
+      "meal": "중식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.629889280205088
+    },
+    {
+      "date": "2025-12-09",
+      "meal": "석식",
+      "actual_kg": 13.5,
+      "predicted_kg": 12.563388846814952
+    },
+    {
+      "date": "2025-04-22",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.161547168640183
+    },
+    {
+      "date": "2023-05-29",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 6.689799553999913
+    },
+    {
+      "date": "2023-10-18",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.364514277266842
+    },
+    {
+      "date": "2023-11-03",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.98917622377621
+    },
+    {
+      "date": "2023-01-13",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.726788593514333
+    },
+    {
+      "date": "2024-11-25",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 12.534926223776218
+    },
+    {
+      "date": "2025-10-20",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.39334838666236
+    },
+    {
+      "date": "2024-01-19",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.010430207292709
+    },
+    {
+      "date": "2025-10-16",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.067909137463433
+    },
+    {
+      "date": "2024-09-10",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.927841631233838
+    },
+    {
+      "date": "2024-06-02",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 3.515933807369101
+    },
+    {
+      "date": "2024-10-26",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.8438673483379375
+    },
+    {
+      "date": "2023-03-12",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 3.8852477730602724
+    },
+    {
+      "date": "2025-03-18",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.290915201465191
+    },
+    {
+      "date": "2024-01-25",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.4674135516444355
+    },
+    {
+      "date": "2024-05-14",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.599115524606956
+    },
+    {
+      "date": "2023-09-15",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.590306542354703
+    },
+    {
+      "date": "2024-10-19",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.452421896975582
+    },
+    {
+      "date": "2023-05-24",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.96452281774598
+    },
+    {
+      "date": "2023-07-02",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.498435031635032
+    },
+    {
+      "date": "2023-06-24",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 3.509226473526477
+    },
+    {
+      "date": "2024-08-12",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.862035305870604
+    },
+    {
+      "date": "2024-01-04",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 3.5558405157342676
+    },
+    {
+      "date": "2024-05-15",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 10.04361261067364
+    },
+    {
+      "date": "2024-08-06",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.378266036047288
+    },
+    {
+      "date": "2023-05-31",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.645932150814861
+    },
+    {
+      "date": "2025-12-11",
+      "meal": "중식",
+      "actual_kg": 14.4,
+      "predicted_kg": 13.356994331281456
+    },
+    {
+      "date": "2023-03-31",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.276769355644353
+    },
+    {
+      "date": "2025-12-20",
+      "meal": "중식",
+      "actual_kg": 8.1,
+      "predicted_kg": 9.66204526000959
+    },
+    {
+      "date": "2025-05-08",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.73737206959707
+    },
+    {
+      "date": "2023-08-07",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.762338615183838
+    },
+    {
+      "date": "2024-08-09",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 9.626776683365645
+    },
+    {
+      "date": "2023-06-27",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.691974096240441
+    },
+    {
+      "date": "2025-09-15",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.50634220607821
+    },
+    {
+      "date": "2024-06-16",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 3.280089176020064
+    },
+    {
+      "date": "2024-04-10",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 10.158446382783882
+    },
+    {
+      "date": "2023-02-01",
+      "meal": "중식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.47159167707293
+    },
+    {
+      "date": "2023-09-06",
+      "meal": "석식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.540342245009882
+    },
+    {
+      "date": "2023-08-26",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.7789058483183515
+    },
+    {
+      "date": "2024-12-09",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.726417084631063
+    },
+    {
+      "date": "2024-07-09",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.61042509696186
+    },
+    {
+      "date": "2023-03-28",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.991815548544596
+    },
+    {
+      "date": "2023-04-11",
+      "meal": "석식",
+      "actual_kg": 12.6,
+      "predicted_kg": 9.970477237590842
+    },
+    {
+      "date": "2024-05-13",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.484454341491835
+    },
+    {
+      "date": "2024-06-27",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.11486485389609
+    },
+    {
+      "date": "2025-09-08",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.038963025087645
+    },
+    {
+      "date": "2024-08-04",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.5770910464535515
+    },
+    {
+      "date": "2024-10-23",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.527805455084128
+    },
+    {
+      "date": "2025-07-28",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.747114330155147
+    },
+    {
+      "date": "2023-05-17",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.471979506400446
+    },
+    {
+      "date": "2024-12-22",
+      "meal": "조식",
+      "actual_kg": 2.7,
+      "predicted_kg": 4.825823251013694
+    },
+    {
+      "date": "2025-08-18",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.618135621241507
+    },
+    {
+      "date": "2024-10-02",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 7.716060751380972
+    },
+    {
+      "date": "2024-10-22",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.767876696652168
+    },
+    {
+      "date": "2023-02-05",
+      "meal": "중식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.494917140824861
+    },
+    {
+      "date": "2025-11-28",
+      "meal": "중식",
+      "actual_kg": 16.2,
+      "predicted_kg": 13.88135169830169
+    },
+    {
+      "date": "2023-07-01",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.345858313989933
+    },
+    {
+      "date": "2023-03-04",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.863666067266072
+    },
+    {
+      "date": "2025-08-25",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.84551613178489
+    },
+    {
+      "date": "2024-04-01",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.239245350482853
+    },
+    {
+      "date": "2025-06-16",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.770931500974513
+    },
+    {
+      "date": "2023-12-07",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 12.11690158887165
+    },
+    {
+      "date": "2025-11-26",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.312187019598037
+    },
+    {
+      "date": "2023-04-12",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.075592753080253
+    },
+    {
+      "date": "2024-06-10",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 6.7558536057080225
+    },
+    {
+      "date": "2024-12-09",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 7.743981335453754
+    },
+    {
+      "date": "2023-07-07",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.619090946186162
+    },
+    {
+      "date": "2023-11-22",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.600507107843123
+    },
+    {
+      "date": "2023-08-28",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.200878717116224
+    },
+    {
+      "date": "2024-07-18",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.763054520479519
+    },
+    {
+      "date": "2024-09-24",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.50963772477522
+    },
+    {
+      "date": "2025-03-05",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.729354755661009
+    },
+    {
+      "date": "2023-07-30",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.0217699781835865
+    },
+    {
+      "date": "2024-09-19",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.9327741229359
+    },
+    {
+      "date": "2024-05-08",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 6.213602066805739
+    },
+    {
+      "date": "2023-04-30",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.141112320645043
+    },
+    {
+      "date": "2023-08-09",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.258786633219719
+    },
+    {
+      "date": "2023-12-26",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 10.433407375957383
+    },
+    {
+      "date": "2023-07-29",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.118770211038958
+    },
+    {
+      "date": "2024-10-28",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 11.84974529441147
+    },
+    {
+      "date": "2024-05-19",
+      "meal": "석식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.866550784142328
+    },
+    {
+      "date": "2025-06-11",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.348738841060906
+    },
+    {
+      "date": "2023-05-19",
+      "meal": "석식",
+      "actual_kg": 14.4,
+      "predicted_kg": 9.927824987757333
+    },
+    {
+      "date": "2025-09-30",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.188539750568071
+    },
+    {
+      "date": "2024-12-04",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 7.66460387529138
+    },
+    {
+      "date": "2024-03-15",
+      "meal": "조식",
+      "actual_kg": 9.0,
+      "predicted_kg": 6.123404787369486
+    },
+    {
+      "date": "2024-11-21",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 8.177635674741921
+    },
+    {
+      "date": "2025-06-20",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.192714805415177
+    },
+    {
+      "date": "2023-04-21",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.571234747238057
+    },
+    {
+      "date": "2023-06-23",
+      "meal": "중식",
+      "actual_kg": 6.3,
+      "predicted_kg": 10.77466287572077
+    },
+    {
+      "date": "2025-09-25",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.787623298302586
+    },
+    {
+      "date": "2023-07-04",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 6.857979204618906
+    },
+    {
+      "date": "2023-02-07",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 6.4417804487179495
+    },
+    {
+      "date": "2024-12-10",
+      "meal": "중식",
+      "actual_kg": 14.4,
+      "predicted_kg": 12.205894985896453
+    },
+    {
+      "date": "2025-04-11",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 10.192073879062107
+    },
+    {
+      "date": "2025-03-14",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.821336137690102
+    },
+    {
+      "date": "2023-12-28",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 7.120874831418578
+    },
+    {
+      "date": "2024-04-03",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 9.881603382279485
+    },
+    {
+      "date": "2023-10-11",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.503437831041502
+    },
+    {
+      "date": "2024-07-16",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 11.05680989023231
+    },
+    {
+      "date": "2023-11-28",
+      "meal": "석식",
+      "actual_kg": 13.5,
+      "predicted_kg": 11.959639724736046
+    },
+    {
+      "date": "2025-05-07",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.410367326790855
+    },
+    {
+      "date": "2024-10-19",
+      "meal": "조식",
+      "actual_kg": 3.6,
+      "predicted_kg": 4.464355476631214
+    },
+    {
+      "date": "2023-03-09",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.325312319420785
+    },
+    {
+      "date": "2023-07-14",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.11770302295099
+    },
+    {
+      "date": "2024-06-05",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 6.3674112227233515
+    },
+    {
+      "date": "2025-09-27",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 8.886820381824068
+    },
+    {
+      "date": "2024-08-23",
+      "meal": "석식",
+      "actual_kg": 12.6,
+      "predicted_kg": 10.997777918772409
+    },
+    {
+      "date": "2024-04-12",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 10.434089611124152
+    },
+    {
+      "date": "2023-08-11",
+      "meal": "조식",
+      "actual_kg": 6.3,
+      "predicted_kg": 7.085644473173889
+    },
+    {
+      "date": "2023-07-25",
+      "meal": "중식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.067744218281724
+    },
+    {
+      "date": "2024-11-27",
+      "meal": "석식",
+      "actual_kg": 14.4,
+      "predicted_kg": 12.301687538338856
+    },
+    {
+      "date": "2024-01-22",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.611409909575723
+    },
+    {
+      "date": "2025-11-11",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 7.728545591663237
+    },
+    {
+      "date": "2025-03-22",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.512551304945058
+    },
+    {
+      "date": "2023-07-03",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.811964603533708
+    },
+    {
+      "date": "2023-07-24",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 9.414991184061039
+    },
+    {
+      "date": "2023-07-12",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 7.1900246768195695
+    },
+    {
+      "date": "2023-03-14",
+      "meal": "조식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.736250132710425
+    },
+    {
+      "date": "2023-06-21",
+      "meal": "중식",
+      "actual_kg": 12.6,
+      "predicted_kg": 11.055033510239761
+    },
+    {
+      "date": "2025-12-01",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 13.962568400981102
+    },
+    {
+      "date": "2023-09-16",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.396590366541351
+    },
+    {
+      "date": "2025-08-04",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.272298747943239
+    },
+    {
+      "date": "2023-03-15",
+      "meal": "조식",
+      "actual_kg": 7.2,
+      "predicted_kg": 5.5412520939844425
+    },
+    {
+      "date": "2024-01-19",
+      "meal": "석식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.433207423458893
+    },
+    {
+      "date": "2025-04-12",
+      "meal": "석식",
+      "actual_kg": 8.1,
+      "predicted_kg": 8.13424088852325
+    },
+    {
+      "date": "2023-09-05",
+      "meal": "석식",
+      "actual_kg": 10.8,
+      "predicted_kg": 11.070869895912912
+    },
+    {
+      "date": "2023-08-02",
+      "meal": "석식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.38779426296742
+    },
+    {
+      "date": "2023-01-20",
+      "meal": "중식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.438604177807487
+    },
+    {
+      "date": "2023-02-04",
+      "meal": "석식",
+      "actual_kg": 3.6,
+      "predicted_kg": 5.49951514735265
+    },
+    {
+      "date": "2024-10-25",
+      "meal": "조식",
+      "actual_kg": 8.1,
+      "predicted_kg": 7.542678907489576
+    },
+    {
+      "date": "2024-08-25",
+      "meal": "석식",
+      "actual_kg": 6.3,
+      "predicted_kg": 5.207333502771741
+    },
+    {
+      "date": "2024-03-22",
+      "meal": "중식",
+      "actual_kg": 10.8,
+      "predicted_kg": 10.465110826673307
+    },
+    {
+      "date": "2023-01-20",
+      "meal": "조식",
+      "actual_kg": 1.8,
+      "predicted_kg": 3.400019808133045
+    },
+    {
+      "date": "2025-03-27",
+      "meal": "석식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.878349552530798
+    },
+    {
+      "date": "2024-02-23",
+      "meal": "석식",
+      "actual_kg": 7.2,
+      "predicted_kg": 6.841493392024642
+    },
+    {
+      "date": "2023-12-31",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 5.314974877206124
+    },
+    {
+      "date": "2025-09-20",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 4.151244526184602
+    },
+    {
+      "date": "2023-03-01",
+      "meal": "조식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.063928328411784
+    },
+    {
+      "date": "2024-03-18",
+      "meal": "중식",
+      "actual_kg": 9.0,
+      "predicted_kg": 9.612167460970397
+    },
+    {
+      "date": "2024-03-06",
+      "meal": "중식",
+      "actual_kg": 9.9,
+      "predicted_kg": 9.974121699134193
+    },
+    {
+      "date": "2024-02-25",
+      "meal": "중식",
+      "actual_kg": 5.4,
+      "predicted_kg": 4.12327882019941
+    },
+    {
+      "date": "2023-01-12",
+      "meal": "중식",
+      "actual_kg": 4.5,
+      "predicted_kg": 5.363426210676579
+    },
+    {
+      "date": "2025-06-18",
+      "meal": "석식",
+      "actual_kg": 11.7,
+      "predicted_kg": 10.50203812755227
+    }
+  ]
+}
