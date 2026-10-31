@@ -9,7 +9,6 @@ from pathlib import Path
 
 import numpy as np
 import joblib
-import onnxruntime as ort
 import pandas as pd
 import requests
 from flask import Flask, jsonify, request, send_from_directory
@@ -23,7 +22,7 @@ DATA_DIR = BASE_DIR / "data"
 MODEL_DIR = BASE_DIR / "models"
 MODEL_1_FILE = MODEL_DIR / "model_1.joblib"
 MODEL_2_FILE = MODEL_DIR / "model_2.joblib"
-MODEL_3_FILE = MODEL_DIR / "model_3.onnx"
+MODEL_4_FILE = MODEL_DIR / "model_4.joblib"
 ACTIVE_MODEL_FILE = MODEL_DIR / "active_model.json"
 CACHE_FILE = DATA_DIR / "menu_cache.json"
 NEIS_URL = "https://open.neis.go.kr/hub/mealServiceDietInfo"
@@ -157,10 +156,9 @@ feature_columns = []
 feature_importance = {}
 model_registry = {}
 model_errors = {}
-model_3_session = None
-model_3_input_name = None
-model_3_error = ""
-model_3_failed = False
+model_4 = None
+model_4_error = ""
+model_4_failed = False
 menu_cache = {}
 
 
@@ -339,18 +337,18 @@ def requested_model_name():
     try:
         setting = json.loads(ACTIVE_MODEL_FILE.read_text(encoding="utf-8"))
         name = setting.get("active_model")
-        return name if name in {"model_1", "model_3"} else "model_1"
+        return name if name in {"model_1", "model_4"} else "model_1"
     except (OSError, json.JSONDecodeError, AttributeError):
         return "model_1"
 
 
 def active_model_name():
     if (
-        requested_model_name() == "model_3"
-        and model_3_session is not None
-        and not model_3_failed
+        requested_model_name() == "model_4"
+        and model_4 is not None
+        and not model_4_failed
     ):
-        return "model_3"
+        return "model_4"
     return "model_1"
 
 
@@ -358,39 +356,37 @@ def update_active_model_status():
     selected = active_model_name()
     training["active_model"] = selected
     training["status"] = (
-        "model_3 · ONNX Runtime"
-        if selected == "model_3"
+        "model_4 · Random Forest joblib"
+        if selected == "model_4"
         else "model_1 · 기존 Random Forest"
     )
-    if model_3_error:
-        training["model_3_error"] = model_3_error
+    if model_4_error:
+        training["model_4_error"] = model_4_error
 
 
-def load_model_3():
-    global model_3_session, model_3_input_name, model_3_error, model_3_failed
-    model_3_session = None
-    model_3_input_name = None
-    model_3_error = ""
-    model_3_failed = False
+def load_model_4():
+    global model_4, model_4_error, model_4_failed
+    model_4 = None
+    model_4_error = ""
+    model_4_failed = False
     try:
-        session = ort.InferenceSession(
-            str(MODEL_3_FILE), providers=["CPUExecutionProvider"]
+        candidate = joblib.load(MODEL_4_FILE)
+        if isinstance(candidate, dict):
+            candidate = candidate.get("model", candidate.get("pipeline"))
+        if candidate is None or not hasattr(candidate, "predict"):
+            raise ValueError("model_4.joblib에 학습된 회귀 파이프라인이 없습니다.")
+        feature_names = list(getattr(candidate, "feature_names_in_", []))
+        if feature_names and feature_names != ["끼니", "메뉴"]:
+            raise ValueError("model_4 입력 특성은 [끼니, 메뉴] 순서여야 합니다.")
+        sample = pd.DataFrame(
+            [{"끼니": "중식", "메뉴": "쌀밥 된장국 계란찜 제육볶음 배추김치"}]
         )
-        inputs = session.get_inputs()
-        if (
-            len(inputs) != 1
-            or inputs[0].type != "tensor(string)"
-            or inputs[0].shape[-1] != 2
-        ):
-            raise ValueError("model_3 입력은 문자열 2개(끼니, 메뉴 문장)여야 합니다.")
-        sample = np.asarray([["중식", "쌀밥 된장국 계란찜"]], dtype=object)
-        result = np.asarray(session.run(None, {inputs[0].name: sample})[0]).reshape(-1)
+        result = np.asarray(candidate.predict(sample)).reshape(-1)
         if not len(result) or not np.isfinite(result[0]):
-            raise ValueError("model_3 샘플 추론 결과가 올바르지 않습니다.")
-        model_3_session = session
-        model_3_input_name = inputs[0].name
+            raise ValueError("model_4 샘플 예측 결과가 올바르지 않습니다.")
+        model_4 = candidate
     except Exception as error:
-        model_3_error = str(error)
+        model_4_error = str(error)
     update_active_model_status()
 
 
@@ -416,19 +412,17 @@ def train_model():
 
 
 def predict_value(meal, dishes):
-    global model_3_error, model_3_failed
-    if active_model_name() == "model_3":
+    global model_4_error, model_4_failed
+    if active_model_name() == "model_4":
         try:
-            text = " ".join(dishes)
-            values = np.asarray([[meal, text]], dtype=object)
-            prediction = model_3_session.run(None, {model_3_input_name: values})[0]
-            result = float(np.asarray(prediction).reshape(-1)[0])
+            features = pd.DataFrame([{"끼니": meal, "메뉴": " ".join(dishes)}])
+            result = float(np.asarray(model_4.predict(features)).reshape(-1)[0])
             if not np.isfinite(result):
-                raise ValueError("model_3 returned a non-finite prediction")
+                raise ValueError("model_4 returned a non-finite prediction")
             return max(0.0, result)
         except Exception as error:
-            model_3_error = str(error)
-            model_3_failed = True
+            model_4_error = str(error)
+            model_4_failed = True
             update_active_model_status()
     with lock:
         frame = model_1_frame(meal, dishes, feature_columns)
