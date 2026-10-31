@@ -49,6 +49,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .risk-badge i { box-shadow: none; }
 
 .forecast-grid { grid-template-columns: minmax(0, 1.12fr) minmax(350px, .88fr); gap: 16px; }
+.forecast-grid > .kpi-grid { grid-column: 1 / -1; margin: 0; }
 .panel, .report-section { border: 1px solid #d4dce2; border-radius: 4px; background: #fff; box-shadow: none; }
 .panel { padding: 19px; }
 .panel-top, .section-heading { border-bottom-color: #e1e6ea; }
