@@ -160,6 +160,7 @@ model_errors = {}
 model_3_session = None
 model_3_input_name = None
 model_3_error = ""
+model_3_failed = False
 menu_cache = {}
 
 
@@ -334,6 +335,65 @@ def model_2_frame(records):
     )
 
 
+def requested_model_name():
+    try:
+        setting = json.loads(ACTIVE_MODEL_FILE.read_text(encoding="utf-8"))
+        name = setting.get("active_model")
+        return name if name in {"model_1", "model_3"} else "model_1"
+    except (OSError, json.JSONDecodeError, AttributeError):
+        return "model_1"
+
+
+def active_model_name():
+    if (
+        requested_model_name() == "model_3"
+        and model_3_session is not None
+        and not model_3_failed
+    ):
+        return "model_3"
+    return "model_1"
+
+
+def update_active_model_status():
+    selected = active_model_name()
+    training["active_model"] = selected
+    training["status"] = (
+        "model_3 · ONNX Runtime"
+        if selected == "model_3"
+        else "model_1 · 기존 Random Forest"
+    )
+    if model_3_error:
+        training["model_3_error"] = model_3_error
+
+
+def load_model_3():
+    global model_3_session, model_3_input_name, model_3_error, model_3_failed
+    model_3_session = None
+    model_3_input_name = None
+    model_3_error = ""
+    model_3_failed = False
+    try:
+        session = ort.InferenceSession(
+            str(MODEL_3_FILE), providers=["CPUExecutionProvider"]
+        )
+        inputs = session.get_inputs()
+        if (
+            len(inputs) != 1
+            or inputs[0].type != "tensor(string)"
+            or inputs[0].shape[-1] != 2
+        ):
+            raise ValueError("model_3 입력은 문자열 2개(끼니, 메뉴 문장)여야 합니다.")
+        sample = np.asarray([["중식", "쌀밥 된장국 계란찜"]], dtype=object)
+        result = np.asarray(session.run(None, {inputs[0].name: sample})[0]).reshape(-1)
+        if not len(result) or not np.isfinite(result[0]):
+            raise ValueError("model_3 샘플 추론 결과가 올바르지 않습니다.")
+        model_3_session = session
+        model_3_input_name = inputs[0].name
+    except Exception as error:
+        model_3_error = str(error)
+    update_active_model_status()
+
+
 def train_model():
     global model, feature_columns, feature_importance
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
@@ -356,6 +416,20 @@ def train_model():
 
 
 def predict_value(meal, dishes):
+    global model_3_error, model_3_failed
+    if active_model_name() == "model_3":
+        try:
+            text = " ".join(dishes)
+            values = np.asarray([[meal, text]], dtype=object)
+            prediction = model_3_session.run(None, {model_3_input_name: values})[0]
+            result = float(np.asarray(prediction).reshape(-1)[0])
+            if not np.isfinite(result):
+                raise ValueError("model_3 returned a non-finite prediction")
+            return max(0.0, result)
+        except Exception as error:
+            model_3_error = str(error)
+            model_3_failed = True
+            update_active_model_status()
     with lock:
         frame = model_1_frame(meal, dishes, feature_columns)
         return max(0.0, float(model.predict(frame)[0]))
@@ -377,6 +451,7 @@ def background_sync():
 
 load_cache()
 train_model()
+load_model_3()
 if API_KEY and len(records_with_menu()) < len(waste_df) * 0.8:
     threading.Thread(target=background_sync, daemon=True).start()
 
