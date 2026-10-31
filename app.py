@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import joblib
+import onnxruntime as ort
 import pandas as pd
 import requests
 from flask import Flask, jsonify, request, send_from_directory
@@ -22,6 +23,7 @@ DATA_DIR = BASE_DIR / "data"
 MODEL_DIR = BASE_DIR / "models"
 MODEL_1_FILE = MODEL_DIR / "model_1.joblib"
 MODEL_2_FILE = MODEL_DIR / "model_2.joblib"
+MODEL_3_FILE = MODEL_DIR / "model_3.onnx"
 ACTIVE_MODEL_FILE = MODEL_DIR / "active_model.json"
 CACHE_FILE = DATA_DIR / "menu_cache.json"
 NEIS_URL = "https://open.neis.go.kr/hub/mealServiceDietInfo"
@@ -155,6 +157,9 @@ feature_columns = []
 feature_importance = {}
 model_registry = {}
 model_errors = {}
+model_3_session = None
+model_3_input_name = None
+model_3_error = ""
 menu_cache = {}
 
 

@@ -1,6 +1,7 @@
 Flask
 joblib
 numpy
+onnxruntime
 pandas
 requests
 scikit-learn
