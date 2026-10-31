@@ -101,6 +101,7 @@ function toggleFavorite(dish) {
 function renderChosen() {
   $('#chosenCount').textContent = state.menu.length;
   $('#chosenList').innerHTML = state.menu.length ? state.menu.map((dish) => `<span class="chosen-pill">${escapeHtml(dish)} <button type="button" aria-label="${escapeHtml(dish)} 제거" data-remove="${escapeHtml(dish)}">×</button></span>`).join('') : '<span class="empty-state">카테고리에서 메뉴를 골라 식단을 구성해 주세요.</span>';
+  $('#predictButton').disabled = state.menu.length === 0;
   $$('[data-remove]').forEach((button) => button.addEventListener('click', () => toggleDish(button.dataset.remove)));
   $$('.menu-chip').forEach((button) => button.classList.toggle('selected', state.menu.includes(button.dataset.dish)));
 }

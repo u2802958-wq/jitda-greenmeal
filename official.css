@@ -68,6 +68,11 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .popular-template { border: 1px solid #8aa9b7; border-radius: 3px; background: #fff; color: #174f68; transition: background .12s ease; }
 .popular-template:hover { transform: none; background: #f1f6f8; }
 .catalog-source { border-bottom-color: #d8dfe5; }
+.workflow-step { display: flex; align-items: center; gap: 10px; margin: 15px 0 4px; padding-top: 11px; border-top: 1px solid #e1e6ea; }
+.workflow-step-number { display: grid; width: 27px; height: 27px; flex: 0 0 auto; place-items: center; border: 1px solid #aebdc7; border-radius: 3px; background: #f1f4f6; color: #214f65; font-size: 12px; font-weight: 700; }
+.workflow-step strong { display: block; color: #263d4b; font-size: 12px; font-weight: 700; }
+.workflow-step span:not(.workflow-step-number) { display: block; margin-top: 1px; color: #61717c; font-size: 10px; }
+.workflow-step-final { margin-top: 17px; }
 .source-head { color: #314653; }
 .source-head button, .chosen-actions button { border-radius: 3px; border-color: #cbd4db; color: #405867; }
 .menu-search { border-radius: 3px; border-color: #bfcbd3; }
@@ -95,6 +100,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .chosen-pill button { border-radius: 2px; }
 .predict-button { border-radius: 3px; background: #174f68; }
 .predict-button:hover { transform: none; background: #103f55; }
+.predict-button:disabled { opacity: .48; cursor: not-allowed; }
 .range-warning { border-radius: 3px; }
 
 .result-panel { border-top: 3px solid #1f617a; }

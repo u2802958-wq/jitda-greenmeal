@@ -1,6 +1,6 @@
 # Model versions
 
-- `model_1.joblib` is the existing menu-and-meal random forest, saved when the server starts.
-- `model_2.json` is the uploaded model specification and evaluation report. It does not contain fitted tree weights or a fitted TF-IDF vectorizer.
-- `model_2.joblib` is trained locally from `data/waste.csv` and `data/menu_cache.json` using the preprocessing and best parameters in `model_2.json`.
-- `active_model.json` selects the model for each prediction request. Set `active_model` to `model_1` to roll back, or `model_2` to use the new specification. The setting is checked on each request, so changing it does not require a server restart.
+- `model_1.joblib` is the existing prediction model, saved by the server at startup.
+- `model_2.json` is the uploaded configuration and evaluation report. It contains no fitted estimator, tree weights, or fitted TF-IDF vocabulary, so it cannot produce predictions by itself.
+- The active application remains on `model_1` until a fitted `model_2.joblib` pipeline is supplied and connected.
+- For model 2, provide a fitted scikit-learn `Pipeline` that accepts a pandas DataFrame with `year_trend`, `month_sin`, `month_cos`, `weekday_sin`, `weekday_cos`, `year_cycle_sin`, `year_cycle_cos`, `meal`, and `menu_text` columns, and predicts waste in kilograms. Save the complete fitted preprocessing and estimator together, including the TF-IDF vocabulary/IDF weights and OneHotEncoder categories.

@@ -329,181 +329,31 @@ def model_2_frame(records):
     )
 
 
-def make_model_2(records):
-    if len(records) < 20:
-        raise ValueError("model_2 학습에는 메뉴가 연결된 기록 20건 이상이 필요합니다.")
-    spec = json.loads(MODEL_2_SPEC_FILE.read_text(encoding="utf-8"))
-    params = spec.get("best_params", {})
-    menu_spec = spec.get("preprocessing", {}).get("menu", "")
-    max_features_match = re.search(r"max_features\s*=\s*(\d+)", menu_spec)
-    ngram_match = re.search(r"ngram_range\s*=\s*\[(\d+)\s*,\s*(\d+)\]", menu_spec)
-    max_features = int(max_features_match.group(1)) if max_features_match else 3000
-    ngram_range = tuple(map(int, ngram_match.groups())) if ngram_match else (1, 2)
-    X = model_2_frame(records)
-    y = pd.Series([record["waste"] for record in records])
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-    preprocessing = ColumnTransformer(
-        [
-            ("meal", OneHotEncoder(handle_unknown="ignore"), ["meal"]),
-            ("date", StandardScaler(), MODEL_2_DATE_COLUMNS),
-            (
-                "menu",
-                TfidfVectorizer(max_features=max_features, ngram_range=ngram_range),
-                "menu_text",
-            ),
-        ]
-    )
-    model = Pipeline(
-        [
-            ("features", preprocessing),
-            (
-                "forest",
-                RandomForestRegressor(
-                    n_estimators=int(params.get("n_estimators", 600)),
-                    max_features=params.get("max_features", 0.7),
-                    min_samples_leaf=int(params.get("min_samples_leaf", 4)),
-                    random_state=42,
-                    n_jobs=-1,
-                ),
-            ),
-        ]
-    )
-    model.fit(X_train, y_train)
-    mae = float(mean_absolute_error(y_test, model.predict(X_test)))
-    transformed_names = model.named_steps["features"].get_feature_names_out()
-    importance = {
-        name.removeprefix("menu__"): float(value)
-        for name, value in zip(
-            transformed_names, model.named_steps["forest"].feature_importances_
-        )
-        if name.startswith("menu__")
-    }
-    all_dishes = {dish for record in records for dish in record["dishes"]}
-    return {
-        "model": model,
-        "feature_importance": importance,
-        "rows": len(X_train),
-        "menu_features": len(all_dishes),
-        "mae": mae,
-    }
-
-
-def requested_model_name():
-    try:
-        value = json.loads(ACTIVE_MODEL_FILE.read_text(encoding="utf-8"))
-        name = value.get("active_model")
-        return name if name in {"model_1", "model_2"} else "model_1"
-    except (OSError, json.JSONDecodeError, AttributeError):
-        return "model_2"
-
-
-def active_model_name():
-    preferred = requested_model_name()
-    if preferred in model_registry:
-        return preferred
-    if "model_1" in model_registry:
-        return "model_1"
-    if "model_2" in model_registry:
-        return "model_2"
-    return None
-
-
-def active_model_artifact(model_name=None):
-    name = model_name or active_model_name()
-    return model_registry.get(name) if name else None
-
-
-def load_or_train_artifact(path, trainer, records, refresh=False):
-    if path.exists() and not refresh:
-        try:
-            artifact = joblib.load(path)
-            if isinstance(artifact, dict) and "model" in artifact:
-                return artifact
-        except Exception:
-            pass
-    artifact = trainer(records)
-    joblib.dump(artifact, path, compress=3)
-    return artifact
-
-
-def train_model(refresh_model_2=False):
-    global model_registry, model_errors
+def train_model():
+    global model, feature_columns, feature_importance
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
     records = records_with_menu()
-    fitted = {}
-    errors = {}
-    for name, trainer, artifact_path, refresh in (
-        ("model_1", make_model_1, MODEL_1_FILE, False),
-        ("model_2", make_model_2, MODEL_2_FILE, refresh_model_2),
-    ):
-        try:
-            artifact = load_or_train_artifact(
-                artifact_path, trainer, records, refresh=refresh
-            )
-            fitted[name] = artifact
-        except Exception as error:
-            errors[name] = str(error)
-    with lock:
-        model_registry = fitted
-        model_errors = errors
-    active_name = active_model_name()
-    artifact = active_model_artifact()
+    artifact = make_model_1(records)
+    model = artifact["model"]
+    feature_columns = artifact["feature_columns"]
+    feature_importance = artifact["feature_importance"]
+    joblib.dump(artifact, MODEL_1_FILE, compress=3)
     training.update(
         {
-            "ready": artifact is not None,
-            "status": f"{active_name} · Random Forest"
-            if active_name
-            else "모델 사용 불가",
-            "active_model": active_name or "",
-            "requested_model": requested_model_name(),
-            "rows": artifact["rows"] if artifact else 0,
-            "menu_features": artifact["menu_features"] if artifact else 0,
-            "mae": artifact["mae"] if artifact else 0.0,
-            "model_errors": model_errors.copy(),
+            "ready": len(records) >= 12,
+            "status": "model_1 · 기존 Random Forest",
+            "active_model": "model_1",
+            "rows": artifact["rows"],
+            "menu_features": artifact["menu_features"],
+            "mae": artifact["mae"],
         }
     )
 
 
-def predict_value(meal, dishes, date_value=None, model_name=None):
-    name = model_name or active_model_name()
-    artifact = active_model_artifact(name)
-    if not artifact:
-        raise RuntimeError("사용 가능한 예측 모델이 없습니다.")
-    date_value = date_value or datetime.now().date().isoformat()
-    if name == "model_1":
-        values = {column: 0 for column in artifact["feature_columns"]}
-        for dish in dishes:
-            if dish in values:
-                values[dish] = 1
-        meal_column = f"meal_{meal}"
-        if meal_column in values:
-            values[meal_column] = 1
-        frame = pd.DataFrame(
-            [[values[column] for column in artifact["feature_columns"]]],
-            columns=artifact["feature_columns"],
-        )
-    else:
-        frame = model_2_frame([{"date": date_value, "meal": meal, "dishes": dishes}])
+def predict_value(meal, dishes):
     with lock:
-        return max(0.0, float(artifact["model"].predict(frame)[0]))
-
-
-def active_feature_importance(dishes, model_name=None):
-    name = model_name or active_model_name()
-    artifact = active_model_artifact(name)
-    if not artifact:
-        return {}
-    if name == "model_1":
-        return artifact["feature_importance"]
-    vectorizer = artifact["model"].named_steps["features"].named_transformers_["menu"]
-    analyzer = vectorizer.build_analyzer()
-    token_importance = artifact["feature_importance"]
-    return {
-        dish: sum(token_importance.get(token, 0.0) for token in set(analyzer(dish)))
-        for dish in dishes
-    }
+        frame = model_1_frame(meal, dishes, feature_columns)
+        return max(0.0, float(model.predict(frame)[0]))
 
 
 def background_sync():
@@ -517,7 +367,7 @@ def background_sync():
     with ThreadPoolExecutor(max_workers=8) as executor:
         list(executor.map(lambda pair: fetch_menu(pair[0], pair[1]), pairs))
     save_cache()
-    train_model(refresh_model_2=True)
+    train_model()
 
 
 load_cache()
