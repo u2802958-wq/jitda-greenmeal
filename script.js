@@ -8,7 +8,7 @@ function readFavorites() {
   }
 }
 
-const state = { meal: '중식', menu: [], categories: {}, groups: {}, popular: {}, favorites: new Set(readFavorites()), activeCategory: '밥류', search: '', basePrediction: null, lastResult: null, lastPrediction: null, scenarioA: null, scenarioB: null, autoPredictTimer: null };
+const state = { meal: '중식', menu: [], categories: {}, groups: {}, popular: {}, favorites: new Set(readFavorites()), activeCategory: '밥류', search: '', basePrediction: null, lastResult: null, lastPrediction: null, predictionSignature: null, scenarioA: null, scenarioB: null };
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
@@ -29,6 +29,14 @@ function matchesMenuSearch(value, query) {
   const compactValue = value.replace(/\s/g, '').toLowerCase();
   const initials = koreanInitials(value).replace(/\s/g, '').toLowerCase();
   return compactValue.includes(compactQuery) || initials.includes(compactQuery);
+}
+
+function currentMenuSignature() {
+  return `${state.meal}\u001f${[...state.menu].sort().join('\u001f')}`;
+}
+
+function hasCurrentPrediction() {
+  return state.lastPrediction != null && state.predictionSignature === currentMenuSignature();
 }
 
 function renderMenuItem(dish, categoryLabel = '') {
@@ -102,6 +110,8 @@ function renderChosen() {
   $('#chosenCount').textContent = state.menu.length;
   $('#chosenList').innerHTML = state.menu.length ? state.menu.map((dish) => `<span class="chosen-pill">${escapeHtml(dish)} <button type="button" aria-label="${escapeHtml(dish)} 제거" data-remove="${escapeHtml(dish)}">×</button></span>`).join('') : '<span class="empty-state">카테고리에서 메뉴를 골라 식단을 구성해 주세요.</span>';
   $('#predictButton').disabled = state.menu.length === 0;
+  $('#saveScenarioButton').disabled = !hasCurrentPrediction();
+  $('#saveScenarioBButton').disabled = !state.scenarioA || !hasCurrentPrediction();
   $$('[data-remove]').forEach((button) => button.addEventListener('click', () => toggleDish(button.dataset.remove)));
   $$('.menu-chip').forEach((button) => button.classList.toggle('selected', state.menu.includes(button.dataset.dish)));
 }
@@ -180,30 +190,6 @@ function updateAdjustedPrediction() {
   updateKpis(prediction);
 }
 
-function clearPredictionDisplay() {
-  state.basePrediction = null;
-  state.lastResult = null;
-  state.lastPrediction = null;
-  $('#predictionValue').innerHTML = '--<small> kg</small>';
-  $('#averageDelta').textContent = '--';
-  $('#predictionNote').textContent = '식단을 구성하면 예상 잔반량을 확인할 수 있습니다.';
-  updateTargetVisual(null);
-  updateKpis(null);
-}
-
-function menuIsPredictable() {
-  return state.menu.length > 0
-    && (state.meal === '조식' || state.menu.some((dish) => categoryOf(dish) === '밥류'))
-    && state.menu.some((dish) => ['반찬류', '김치·나물류'].includes(categoryOf(dish)));
-}
-
-function scheduleAutoPrediction() {
-  window.clearTimeout(state.autoPredictTimer);
-  state.autoPredictTimer = window.setTimeout(() => {
-    if (menuIsPredictable()) predict(true);
-  }, 220);
-}
-
 function loadPopularTemplate() {
   const pick = (category) => state.popular[category]?.[0] || state.categories[category]?.[0];
   const sideCategory = state.popular['반찬류']?.length ? '반찬류' : '김치·나물류';
@@ -213,16 +199,13 @@ function loadPopularTemplate() {
     pick('고기·메인류'),
     pick(sideCategory),
   ].filter(Boolean))];
-  state.lastPrediction = null;
   renderCatalog();
   renderChosen();
-  clearPredictionDisplay();
-  scheduleAutoPrediction();
 }
 
 function updateScenarioPanel() {
   if (!state.scenarioA) return;
-  $('#saveScenarioBButton').disabled = !state.menu.length || state.lastPrediction == null;
+  $('#saveScenarioBButton').disabled = !state.menu.length || !hasCurrentPrediction();
   $('#compareAnalysisButton').disabled = !state.scenarioB;
   $('#scenarioAPrediction').textContent = `${state.scenarioA.prediction.toFixed(2)} kg`;
   $('#scenarioAMenu').textContent = state.scenarioA.menu.join(' · ');
@@ -234,7 +217,7 @@ function updateScenarioPanel() {
 }
 
 async function saveScenarioB() {
-  if (state.lastPrediction == null || !state.menu.length) return;
+  if (!hasCurrentPrediction() || !state.menu.length) return;
   state.scenarioB = { prediction: state.lastPrediction, menu: [...state.menu], meal: state.meal };
   updateScenarioPanel();
   clearSelectedMenu();
@@ -267,11 +250,9 @@ function loadScenario(scenario) {
   if (!scenario) return;
   state.meal = scenario.meal || state.meal;
   state.menu = [...scenario.menu];
-  clearPredictionDisplay();
   $$('.meal-button').forEach((item) => item.classList.toggle('active', item.dataset.meal === state.meal));
   renderCatalog();
   renderChosen();
-  predict(false);
 }
 
 function toggleDish(dish) {
@@ -287,15 +268,11 @@ function toggleDish(dish) {
     }
     state.menu = [...state.menu, dish];
   }
-  clearPredictionDisplay();
-  $('#saveScenarioBButton').disabled = true;
   renderChosen();
-  scheduleAutoPrediction();
 }
 
 function clearSelectedMenu() {
   state.menu = [];
-  clearPredictionDisplay();
   $('#saveScenarioBButton').disabled = true;
   renderCatalog();
   renderChosen();
@@ -353,6 +330,7 @@ async function predict(force = false) {
     $('#resultLabel').textContent = `${state.meal} 예상 잔반량`;
     state.basePrediction = result.prediction;
     state.lastResult = result;
+    state.predictionSignature = currentMenuSignature();
     $('#saveScenarioBButton').disabled = !state.scenarioA;
     updateAdjustedPrediction();
   } catch (error) { $('#predictionNote').textContent = '예측 서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.'; }
@@ -409,17 +387,16 @@ function installDashboardExtras() {
 
 installDashboardExtras();
 localizeInterface();
-$$('.meal-button').forEach((button) => button.addEventListener('click', () => { state.meal = button.dataset.meal; $$('.meal-button').forEach((item) => item.classList.toggle('active', item === button)); $('#resultLabel').textContent = `${state.meal} 예상 잔반량`; clearPredictionDisplay(); scheduleAutoPrediction(); }));
+$$('.meal-button').forEach((button) => button.addEventListener('click', () => { state.meal = button.dataset.meal; $$('.meal-button').forEach((item) => item.classList.toggle('active', item === button)); renderChosen(); }));
 $('#clearMenu').addEventListener('click', clearSelectedMenu);
 $('#clearChosenButton').addEventListener('click', clearSelectedMenu);
 $('#menuSearch').addEventListener('input', (event) => { state.search = event.target.value; renderCatalog(); });
 $('#clearSearch').addEventListener('click', () => { state.search = ''; $('#menuSearch').value = ''; renderCatalog(); $('#menuSearch').focus(); });
 $('#predictButton').addEventListener('click', () => predict(false));
 $('#forcePredict').addEventListener('click', () => predict(true));
-$('#targetWaste').addEventListener('input', () => state.lastResult ? updateAdjustedPrediction() : updateTargetVisual(null));
 $('#popularTemplateButton').addEventListener('click', loadPopularTemplate);
 $('#compareAnalysisButton').addEventListener('click', () => { if (state.scenarioA && state.scenarioB) $('#comparePanel').hidden = false; });
-$('#saveScenarioButton').addEventListener('click', () => { if (state.lastPrediction == null) return; state.scenarioA = { prediction: state.lastPrediction, menu: [...state.menu], meal: state.meal }; updateScenarioPanel(); clearSelectedMenu(); });
+$('#saveScenarioButton').addEventListener('click', () => { if (!hasCurrentPrediction()) return; state.scenarioA = { prediction: state.lastPrediction, menu: [...state.menu], meal: state.meal }; updateScenarioPanel(); clearSelectedMenu(); });
 $('#saveScenarioBButton').addEventListener('click', saveScenarioB);
 $('#impactPeriod').addEventListener('change', updateImpact);
 $$('.compare-tab').forEach((tab) => tab.addEventListener('click', () => { $$('.compare-tab').forEach((item) => item.classList.toggle('active', item === tab)); loadScenario(tab.dataset.scenario === 'a' ? state.scenarioA : state.scenarioB); }));
