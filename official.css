@@ -69,11 +69,12 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .workflow-step strong { display: block; color: #203a54; font-size: 14px; font-weight: 700; }
 .workflow-step span:not(.workflow-step-number) { display: block; margin-top: 2px; color: #5d7082; font-size: 11px; }
 .workflow-step-final { margin-top: 17px; }
-.step2-guidance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 11px 0 14px; }
-.step2-guidance > div { min-width: 0; padding: 11px 12px; border: 1px solid #c7d5e2; background: #f0f4f8; }
-.step2-guidance strong { display: block; margin-bottom: 4px; color: #193c66; font-size: 12px; font-weight: 700; }
-.step2-guidance p { margin: 0; color: #314a64; font-size: 12px; line-height: 1.55; }
-.step2-guidance p b { color: #17385f; font-weight: 700; }
+.workflow-step-menu { display: grid; grid-template-columns: 40px minmax(155px, .7fr) minmax(0, 1.5fr); align-items: center; gap: 12px; }
+.workflow-step-copy { min-width: 0; }
+.step2-rules { display: flex; min-width: 0; justify-content: flex-end; gap: 7px; }
+.step2-rules p { display: flex; min-width: 0; align-items: flex-start; gap: 7px; margin: 0; padding: 8px 9px; border: 1px solid #c7d5e2; background: #f0f4f8; color: #314a64; font-size: 13px; line-height: 1.45; }
+.step2-rules b { flex: 0 0 auto; color: #17385f; font-weight: 700; }
+.step2-howto { margin: -1px 0 14px 53px; color: #405d78; font-size: 13px; line-height: 1.5; }
 .source-head { color: #314653; }
 .source-head button, .chosen-actions button { border-radius: 3px; border-color: #cbd4db; color: #405867; }
 .menu-search { border-radius: 3px; border-color: #bfcbd3; }
@@ -168,7 +169,9 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   .official-header-inner { padding-inline: 18px; }
   .official-brand-row { min-height: 70px; }
   .content { padding: 23px 18px 36px; }
-  .step2-guidance { grid-template-columns: 1fr; }
+  .workflow-step-menu { grid-template-columns: 40px minmax(0, 1fr); align-items: start; }
+  .step2-rules { grid-column: 2; display: grid; grid-template-columns: 1fr; }
+  .step2-howto { margin-left: 53px; }
 }
 
 @media (max-width: 480px) {
