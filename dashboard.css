@@ -75,9 +75,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .meal-button { min-width: 70px; padding: 7px 13px; border: 0; border-radius: 6px; background: transparent; color: #586b70; font-size: 12px; font-weight: 600; transition: background .16s ease, color .16s ease, box-shadow .16s ease; }
 .meal-button:hover { color: var(--teal-dark); }
 .meal-button.active { background: #fff; color: var(--teal-dark); box-shadow: 0 1px 4px rgba(17, 51, 54, .12); }
-.popular-template { display: flex; width: 100%; align-items: center; justify-content: center; gap: 8px; margin: 0 0 13px; padding: 9px 12px; border: 1px dashed #9ccfc9; border-radius: 8px; background: #f4fbfa; color: var(--teal-dark); font-size: 11px; font-weight: 600; transition: background .16s ease, transform .16s ease; }
-.popular-template:hover { transform: translateY(-1px); background: #e8f7f5; }
-.popular-template span { font-size: 14px; }
 .catalog-source { padding: 0 0 14px; border-bottom: 1px solid var(--line); }
 .source-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; color: #34494e; font-size: 12px; font-weight: 600; }
 .source-head small { margin-left: 6px; color: #829196; font-size: 10px; font-weight: 400; }
@@ -224,14 +221,11 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .compare-card span { color: #718186; font-size: 10px; }
 .compare-card strong { display: block; margin: 6px 0; color: var(--teal-dark); font-size: 22px; }
 .compare-card small { display: block; color: #697b80; font-size: 10px; line-height: 1.4; }
-.impact-toolbar { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; color: #52676b; font-size: 11px; }
-.impact-toolbar select { padding: 6px 8px; border: 1px solid #dce5e6; border-radius: 6px; background: #fff; color: var(--ink); }
-.impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 9px; }
-.impact-grid > div { padding: 12px; border-radius: 8px; background: #f4f9f8; }
-.impact-grid strong { display: block; color: var(--teal-dark); font-size: 20px; }
-.impact-grid span, .impact-note { color: #6b7c80; font-size: 9px; }
-.impact-note { margin: 10px 0 0; }
-
+.compare-carbon-metrics { display: grid; gap: 6px; margin-top: 12px; }
+.compare-carbon-metrics > div { display: flex; align-items: center; justify-content: space-between; gap: 7px; padding-top: 6px; border-top: 1px solid #e5ebee; }
+.compare-carbon-metrics span { color: #62737e; font-size: 9px; }
+.compare-carbon-metrics strong { margin: 0; color: #244d78; font-size: 12px; white-space: nowrap; }
+.compare-carbon-note { margin: 10px 0 0; color: #596d7f; font-size: 10px; line-height: 1.5; }
 .alternative-modal { position: fixed; z-index: 60; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(12, 33, 38, .45); }
 .alternative-modal[hidden] { display: none; }
 .alternative-dialog { position: relative; width: min(470px, 100%); padding: 24px; border: 1px solid var(--line); border-radius: 13px; background: #fff; box-shadow: 0 24px 70px #132b3040; }

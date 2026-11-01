@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="학교급식 메뉴 구성과 잔반 관리 지원 서비스입니다." />
-  <title>학교급식 잔반 관리</title>
+  <meta name="description" content="학교급식 메뉴 구성과 잔반량 예측을 지원합니다." />
+  <title>학교급식 잔반 예측</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="/styles.css" />
   <link rel="stylesheet" href="/dashboard.css" />
   <link rel="stylesheet" href="/official.css" />
 </head>
 <body>
+  <a class="skip-link" href="#top">본문으로 건너뛰기</a>
+  <section class="intro-cover" aria-labelledby="introTitle">
+    <div class="intro-inner">
+      <p class="intro-kicker">거창대성고등학교 급식 운영 지원</p>
+      <p class="intro-problem">매 끼니 남는 급식,</p>
+      <h1 id="introTitle">줄일 방법을<br /><em>찾았습니다.</em></h1>
+      <p class="intro-description">많은 잔반 발생은 식량 자원 낭비와 이산화탄소 배출로 이어집니다.<br />실제 급식 기록과 식단을 바탕으로 예상 잔반량을 살펴보는 서비스를 만들었습니다.</p>
+      <a class="intro-action" href="#top">식단과 잔반량 확인하기 <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="intro-scroll-cue" aria-hidden="true"><span></span>아래로 내려서 서비스 살펴보기</div>
+  </section>
   <main id="top" class="app-shell">
-    <header class="official-header">
-      <div class="official-utility"><div class="official-header-inner"><span>학교급식 운영 지원 서비스</span><span>영양교사 업무 안내</span></div></div>
-      <div class="official-header-inner official-brand-row"><a class="sidebar-brand" href="#top"><span>학교급식 잔반 관리<small>식단 구성과 운영 계획을 위한 지원 서비스</small></span></a></div>
-    </header>
     <section class="content">
-      <section id="history" class="report-section"><div class="section-heading"><div><span class="section-kicker">운영 통계</span><h2>끼니별 잔반 발생량</h2></div><span class="report-period">2025 실제 측정 데이터</span></div><div class="report-grid"><div class="chart-card"><div class="chart-head"><span>끼니별 평균 발생량</span><span class="unit">kg / 1회</span></div><div id="mealBars" class="bar-chart"><div class="bar-loading">데이터를 불러오는 중입니다...</div></div><div class="chart-foot"><span>조식에서 석식으로 갈수록 평균량이 증가합니다.</span></div></div><div class="stat-card"><span class="section-kicker">예측 참고</span><div class="stat-number"><strong id="maeValue">1.82</strong><span>kg<br />평균 오차</span></div><p>예측값과 실제 잔반량의 평균적인 차이입니다.</p><div class="stat-row"><span>학습 샘플</span><b id="trainedRows">789건</b></div><div class="stat-row"><span>사용 모델</span><b>랜덤 포레스트</b></div><div class="stat-row"><span>특징 수</span><b id="featureCount">끼니 + 메뉴</b></div></div></div></section>
-      <div class="page-heading"><div><p class="eyebrow">영양교사 업무 지원</p><h1>급식 잔반 <em>관리</em></h1><p class="lede">식단을 구성하고 예상 잔반량을 확인해 급식 운영 계획에 참고할 수 있습니다.</p></div><div class="data-chip"><b id="dataRows">791</b><span>실제 잔반 기록<br />2025.01 — 12</span></div></div>
+      <header class="workflow-intro"><h1>그럼, 직접 해봅시다</h1></header>
+      <section id="history" class="report-section"><aside class="dataset-notice" aria-label="데이터 적용 범위"><span class="dataset-notice-label">적용 대상</span><div><strong>거창대성고등학교 급식 데이터 기준</strong><p>아래 끼니별 평균과 모델 성능은 거창대성고등학교의 2023~2025년 조식·중식·석식 기록으로 산출했습니다. 예측 모델도 해당 학교 자료에 맞춰져 있어 다른 학교에서는 메뉴와 급식 환경에 따라 결과가 다를 수 있습니다.</p></div></aside><div class="section-heading"><div><span class="section-kicker">운영 통계</span><h2>끼니별 잔반 발생량</h2></div><span class="report-period">2023–2025 실제 환산 무게</span></div><div class="report-grid"><div class="chart-card"><div class="chart-head"><span>끼니별 평균 환산 무게</span><span class="unit">kg / 1회</span></div><div id="mealBars" class="bar-chart meal-average-grid"><div class="bar-loading">데이터를 불러오는 중입니다...</div></div></div><div class="stat-card model-metrics-card"><div class="model-metrics-heading"><span class="section-kicker">검증 결과</span><h3>예측 모델 성능</h3></div><div class="model-metrics-grid"><div class="model-metric"><span>RMSE</span><strong>1.455<small>kg</small></strong></div><div class="model-metric"><span>MAE</span><strong>1.054<small>kg</small></strong></div><div class="model-metric"><span>MedianAE</span><strong>0.821<small>kg</small></strong></div><div class="model-metric"><span>R²</span><strong>0.788</strong></div></div><p class="model-metrics-note">RMSE·MAE·MedianAE는 오차(kg), R²는 설명력을 나타냅니다.</p></div></div></section>
+      <div class="page-heading"><div><p class="eyebrow">영양교사 업무 지원</p><h1>급식 잔반 <em>예측</em></h1><p class="lede">식단을 구성하고 예상 잔반량을 확인해 급식 운영 계획에 참고할 수 있습니다.</p></div><div class="data-chip"><b id="dataRows">791</b><span>실제 잔반 기록<br />2025.01 — 12</span></div></div>
 
       <section id="forecast" class="forecast-grid">
         <div class="panel planner-panel">
@@ -26,7 +34,6 @@
           <div class="workflow-step"><span class="workflow-step-number">1</span><div><strong>끼니 종류 설정하기</strong><span>조식, 중식, 석식 중 선택하세요.</span></div></div>
           <div class="controls"><div class="meal-switch" role="tablist" aria-label="끼니 선택"><button class="meal-button" data-meal="조식">조식</button><button class="meal-button active" data-meal="중식">중식</button><button class="meal-button" data-meal="석식">석식</button></div></div>
           <div class="workflow-step"><span class="workflow-step-number">2</span><div><strong>식단 구성하기</strong><span>분류별 메뉴를 골라 오늘의 식단을 만드세요.</span></div></div>
-          <button id="popularTemplateButton" class="popular-template" type="button"><span aria-hidden="true">＋</span> 인기 식단 불러오기</button>
           <div class="catalog-source"><div class="source-head"><span>미래 식단 구성하기 <small>학습 데이터의 전체 메뉴</small></span><button id="clearMenu" type="button">전체 해제</button></div><label class="menu-search"><span aria-hidden="true">⌕</span><input id="menuSearch" type="search" placeholder="메뉴 이름으로 전체 검색" autocomplete="off" /><button id="clearSearch" type="button" aria-label="검색어 지우기">×</button></label><section id="favoriteCatalog" class="favorite-catalog" hidden aria-label="즐겨찾기 메뉴"><div class="favorite-heading">즐겨찾기 <span id="favoriteCount">0</span></div><div id="favoriteList" class="favorite-list"></div></section><div id="categoryTabs" class="category-tabs"></div><div id="menuList" class="menu-list"><div class="loading-line">메뉴 카탈로그를 불러오는 중입니다...</div></div><p class="new-menu-note">과거에 함께 나오지 않았던 조합도 선택할 수 있습니다. 학습에 없던 완전히 새로운 메뉴는 끼니 평균을 중심으로 예측됩니다.</p></div>
           <div class="chosen-area"><div class="source-head"><span>내가 만든 식단 <b id="chosenCount">0</b></span><span class="chosen-actions"><span class="hint">조식 밥 선택 예외 · 밥·국 1개 / 그 외 3개</span><button id="clearChosenButton" type="button">선택 메뉴 비우기</button></span></div><div id="chosenList" class="chosen-list"><span class="empty-state">카테고리에서 메뉴를 골라 식단을 구성해 주세요.</span></div><p id="selectionNotice" class="selection-notice" aria-live="polite"></p></div>
           <div class="workflow-step workflow-step-final"><span class="workflow-step-number">3</span><div><strong>예상 잔반량 확인하기</strong><span>구성한 식단의 예상량과 목표를 비교합니다.</span></div></div>
@@ -35,16 +42,12 @@
         </div>
 
         <div class="panel result-panel"><div class="panel-top"><div><span class="section-kicker">잔반 산정</span><h2>예상 잔반량</h2></div><span class="live-pill"><i></i> 예측 기준</span></div><div class="result-main"><span id="resultLabel">중식 예상 잔반량</span><strong id="predictionValue">--<small> kg</small></strong><p id="predictionNote">메뉴를 선택하면 예상량을 확인할 수 있습니다.</p></div><div class="metric-row"><div><span>끼니 평균과 차이</span><strong id="averageDelta">--</strong></div></div><div class="target-block"><div class="target-head"><span>1끼 목표 잔반량</span><label><input id="targetWaste" type="number" value="12" min="1" max="100" step="1" /> kg</label></div><div class="target-gauge"><i id="targetGauge"></i><b id="targetMarker"></b></div><div class="target-foot"><span id="currentTargetText">예측 전</span><span>목표 기준선</span></div></div><div class="contributor-block"><div class="contributor-head"><span>메뉴별 잔반 영향</span><small>메뉴를 선택하면 영향을 확인할 수 있습니다.</small></div><div id="contributors"><span class="contributor-empty">식단을 구성하면 메뉴별 영향을 표시합니다.</span></div></div><div class="compare-actions"><button id="saveScenarioButton" type="button">현재 식단을 A로 저장</button><button id="saveScenarioBButton" type="button" disabled>현재 식단을 B로 저장</button></div><div id="comparePanel" class="compare-panel" hidden><div class="compare-tabs"><button class="compare-tab active" data-scenario="a">식단 A</button><button class="compare-tab" data-scenario="b">식단 B</button></div><div class="compare-cards"><div class="compare-card"><span>식단 A</span><strong id="scenarioAPrediction">-- kg</strong><small id="scenarioAMenu">저장 전</small></div><div class="compare-card"><span>식단 B</span><strong id="scenarioBPrediction">-- kg</strong><small id="scenarioBMenu">저장 전</small></div></div><div class="impact-toolbar"><span>기간별 환경 영향</span><label><select id="impactPeriod"><option value="7">1주</option><option value="30" selected>1개월</option><option value="90">3개월</option><option value="180">1학기</option></select></label></div><div class="impact-grid"><div><strong id="impactWaste">--</strong><span>kg 음식물 감소</span></div><div><strong id="impactCarbon">--</strong><span>kgCO₂eq 감축</span></div></div><p id="impactNote" class="impact-note">A와 B를 모두 저장하면 기간별 효과를 계산합니다.</p></div></div></div>
-        <section class="kpi-grid" aria-label="예상 잔반량 요약">
-          <article class="kpi-card risk-kpi"><div class="kpi-label">잔반 위험 수준</div><div class="kpi-main"><span id="riskBadge" class="risk-badge risk-pending"><i></i> 식단 입력 대기</span><span id="riskAmount" class="kpi-side-value">목표 12kg</span></div><p id="riskDescription">식단 구성 후 목표 기준으로 표시합니다.</p></article>
-          <article class="kpi-card"><div class="kpi-label">예상 잔반량</div><div class="kpi-main"><strong id="kpiWasteValue" class="kpi-value">--<small>kg</small></strong><span id="kpiWasteDelta" class="kpi-delta">끼니 평균 대비 대기</span></div><p>끼니 평균과 비교한 예상치</p></article>
-          <article class="kpi-card"><div class="kpi-label">탄소 절감 환산</div><div class="kpi-main"><strong id="carbonTrees" class="kpi-value">--<small>그루</small></strong><span id="carbonCo2" class="kpi-delta">CO₂ --kg</span></div><p>평균 잔반량 대비 환산 추정</p></article>
-        </section>
       </section>
 
 
     </section>
   </main>
+  <section class="bottom-reserved-space" aria-labelledby="developmentTitle"><div class="development-copy"><span class="development-kicker">앞으로의 발전 계획</span><h2 id="developmentTitle">잔반을 줄이는 다음 단계는<br /><em>학생의 식사 인식입니다.</em></h2><p>잔반이 많이 발생할 것으로 예상되는 끼니에서 학생들이 남기기 쉬운 메뉴를 파악하겠습니다. 급식실의 조리·배식 조정에 그치지 않고, 학생들이 그 메뉴를 왜 먹어야 하는지 이해하도록 도와 인식을 바꾸는 방향으로 발전시킬 계획입니다.</p></div><small class="development-school">거창대성고등학교</small></section>
   <script src="/script.js"></script>
 </body>
 </html>

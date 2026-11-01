@@ -494,11 +494,8 @@ def menu():
 @app.get("/api/catalog")
 def catalog():
     dishes = set(DEFAULT_MENU)
-    menu_frequency = {}
     for cached_menu in menu_cache.values():
         dishes.update(cached_menu)
-        for dish in set(cached_menu):
-            menu_frequency[dish] = menu_frequency.get(dish, 0) + 1
     categories = {category: [] for category in [*CATEGORY_RULES.keys(), "기타 메뉴"]}
     groups = {category: {} for category in categories}
     for dish in sorted(dishes):
@@ -513,25 +510,10 @@ def catalog():
         ]
         for category, families in groups.items()
     }
-    popular = {
-        category: [
-            dish
-            for dish, _ in sorted(
-                (
-                    (dish, count)
-                    for dish, count in menu_frequency.items()
-                    if classify_dish(dish) == category
-                ),
-                key=lambda item: (-item[1], item[0]),
-            )[:3]
-        ]
-        for category in categories
-    }
     return jsonify(
         {
             "categories": categories,
             "groups": grouped,
-            "popular": popular,
             "total": len(dishes),
         }
     )
