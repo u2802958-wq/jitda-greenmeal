@@ -281,7 +281,12 @@ body { background: #f1f4f8; color: var(--ink); }
 .stat-card .model-metrics-heading .section-kicker { color: #536b84; }
 .stat-card .model-metrics-heading h3 { color: #1a3658; }
 .content { background: #fff; padding-bottom: clamp(180px, 24vh, 300px); }
-.workflow-step-compare { margin-top: 26px; padding-top: 18px; }
+.workflow-step-compare { display: grid; grid-template-columns: 40px minmax(150px, .68fr) minmax(0, 1.5fr); align-items: center; gap: 12px; margin-top: 26px; padding-top: 18px; border-top: 1px solid #e1e6ea; }
+.workflow-step-compare .workflow-step-number { grid-column: 1; grid-row: 1; }
+.workflow-step-compare .workflow-step-copy { grid-column: 2; }
+.step4-guide { grid-column: 3; padding: 11px 13px; border: 1px solid #c4d2df; background: #edf2f7; }
+.step4-guide p { margin: 0; color: #2b4562; font-size: 13px; line-height: 1.6; }
+.step4-guide strong { color: #17385f; font-weight: 800; }
 .compare-dialog-head h2 { font-size: 19px; font-weight: 700; }
 .compare-carbon-metrics { display: grid; gap: 6px; margin-top: 12px; }
 .compare-carbon-metrics > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 7px; border-top: 1px solid #d6e0ea; }
@@ -336,7 +341,11 @@ body { background: #f1f4f8; color: var(--ink); }
   .meal-average-label { font-size: 11px; }
   .model-metrics-grid { gap: 6px; }
   .content { padding-bottom: 180px; }
-  .workflow-step-compare { margin-top: 20px; padding-top: 14px; }
+  .workflow-step-compare { grid-template-columns: 40px minmax(0, 1fr); align-items: start; gap: 10px; margin-top: 20px; padding-top: 14px; }
+  .workflow-step-compare .workflow-step-number { grid-column: 1; grid-row: 1 / span 2; }
+  .workflow-step-compare .workflow-step-copy { grid-column: 2; grid-row: 1; }
+  .step4-guide { grid-column: 2; grid-row: 2; padding: 10px; }
+  .step4-guide p { font-size: 12px; }
   .compare-cards { grid-template-columns: 1fr; }
   .dataset-notice { padding: 14px; }
   .dataset-notice strong { font-size: 16px; }

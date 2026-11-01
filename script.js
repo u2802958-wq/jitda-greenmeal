@@ -348,7 +348,7 @@ function installDashboardExtras() {
   $('.compare-actions').append(compareButton);
   const compareStep = document.createElement('div');
   compareStep.className = 'workflow-step workflow-step-compare';
-  compareStep.innerHTML = '<span class="workflow-step-number">4</span><div class="workflow-step-copy"><strong>잔반량 비교하기</strong></div><div class="step4-guide"><div><b>1</b><span>식단을 구성하고 식단안 A 저장을 누릅니다.</span></div><div><b>2</b><span>다른 식단을 구성하고 식단안 B 저장을 누릅니다.</span></div><div><b>3</b><span>비교 분석 열기를 눌러 두 결과를 확인합니다.</span></div></div>';
+  compareStep.innerHTML = '<span class="workflow-step-number">4</span><div class="workflow-step-copy"><strong>잔반량 비교하기</strong></div><div class="step4-guide"><p>식단 하나를 구성해 <strong>식단안 A 저장</strong>을 누르고, 다른 식단을 구성해 <strong>식단안 B 저장</strong>을 누른 뒤 <strong>비교 분석 열기</strong>를 누르세요.</p></div>';
   $('.compare-actions').before(compareStep);
 
   const comparePanel = $('#comparePanel');
