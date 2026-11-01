@@ -282,7 +282,7 @@ body { background: #f1f4f8; color: var(--ink); }
 
 .skip-link { position: absolute; z-index: 100; top: -48px; left: 16px; padding: 9px 12px; background: #fff; color: #17385f; }
 .skip-link:focus { top: 12px; }
-.intro-cover { position: relative; display: grid; min-height: 100vh; min-height: 100svh; place-items: center; overflow: hidden; padding: 64px 24px 92px; background: #17385f; color: #fff; text-align: center; }
+.intro-cover { position: relative; display: grid; min-height: 100vh; min-height: 100svh; place-items: center; overflow: hidden; padding: 28px 24px 68px; background: #17385f; color: #fff; text-align: center; }
 .bottom-reserved-space { position: relative; display: grid; width: 100%; height: 100vh; height: 100dvh; place-items: center; padding: 50px 24px 74px; background: #17385f; color: #fff; text-align: center; }
 .development-copy { width: min(820px, 100%); margin: 0 auto; }
 .development-kicker { display: inline-block; margin-bottom: 18px; color: #c4d5e5; font-size: 12px; font-weight: 600; }
@@ -290,23 +290,29 @@ body { background: #f1f4f8; color: var(--ink); }
 .development-copy h2 em { color: #b9cee2; font-style: normal; }
 .development-copy p { max-width: 700px; margin: 20px auto 0; color: #e0e8f0; font-size: 14px; line-height: 1.9; }
 .development-school { position: absolute; right: max(24px, calc((100vw - 1280px) / 2)); bottom: 20px; color: #c4d0dc; font-size: 11px; }
-.intro-inner { width: min(860px, 100%); margin: 0 auto; }
-.intro-kicker { display: inline-block; margin: 0 0 30px; padding: 5px 10px; border: 1px solid #6f8aa5; color: #d7e2ed; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
-.intro-problem { margin: 0 0 8px; color: #e0e9f1; font-size: clamp(17px, 2.2vw, 22px); font-weight: 500; }
-.intro-cover h1 { margin: 0; color: #fff; font-size: clamp(42px, 7vw, 76px); font-weight: 700; letter-spacing: -.055em; line-height: 1.2; }
+.intro-inner { display: flex; width: min(1080px, 100%); flex-direction: column; align-items: center; margin: 0 auto; }
+.intro-image { width: min(900px, 92vw); height: clamp(160px, 29vh, 270px); margin: 0 auto 16px; overflow: hidden; border: 1px solid #66819d; background: #102b49; }
+.intro-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 55%; }
+.intro-kicker { display: inline-block; margin: 0 0 8px; padding: 4px 9px; border: 1px solid #6f8aa5; color: #d7e2ed; font-size: 11px; font-weight: 600; letter-spacing: .02em; }
+.intro-problem { margin: 0 0 4px; color: #e0e9f1; font-size: clamp(15px, 1.8vw, 19px); font-weight: 500; }
+.intro-cover h1 { margin: 0; color: #fff; font-size: clamp(38px, 5.6vw, 64px); font-weight: 700; letter-spacing: -.055em; line-height: 1.12; }
 .intro-cover h1 em { color: #b9cee2; font-style: normal; }
-.intro-description { margin: 22px auto 0; color: #e0e9f1; font-size: clamp(13px, 1.5vw, 16px); line-height: 1.85; }
-.intro-action { display: inline-flex; min-height: 48px; align-items: center; gap: 22px; margin-top: 32px; padding: 0 17px; border: 1px solid #fff; background: #fff; color: #17385f; font-size: 13px; font-weight: 700; transition: background .15s ease, color .15s ease; }
+.intro-description { max-width: 820px; margin: 13px auto 0; color: #e0e9f1; font-size: clamp(12px, 1.35vw, 15px); line-height: 1.65; }
+.intro-action { display: inline-flex; min-height: 44px; align-items: center; gap: 18px; margin-top: 19px; padding: 0 16px; border: 1px solid #fff; background: #fff; color: #17385f; font-size: 12px; font-weight: 700; transition: background .15s ease, color .15s ease; }
 .intro-action:hover { background: #e6edf4; color: #102b49; }
 .intro-action span { font-size: 17px; line-height: 1; }
 .intro-scroll-cue { position: absolute; bottom: 22px; left: 50%; display: flex; flex-direction: column; align-items: center; gap: 7px; transform: translateX(-50%); color: #c2d1df; font-size: 10px; }
 .intro-scroll-cue span { width: 1px; height: 21px; background: #9bb0c5; }
 
 @media (max-width: 600px) {
-  .intro-cover { padding: 48px 20px 86px; }
-  .intro-kicker { margin-bottom: 24px; }
+  .intro-cover { padding: 22px 16px 58px; }
+  .intro-image { width: 100%; height: clamp(145px, 24vh, 205px); margin-bottom: 13px; }
+  .intro-kicker { margin-bottom: 7px; font-size: 10px; }
+  .intro-problem { font-size: 15px; }
+  .intro-cover h1 { font-size: clamp(34px, 9vw, 42px); }
   .intro-description br { display: none; }
-  .intro-description { max-width: 420px; }
+  .intro-description { max-width: 420px; margin-top: 11px; font-size: 12px; line-height: 1.55; }
+  .intro-action { min-height: 42px; margin-top: 15px; }
   .bottom-reserved-space { padding: 40px 20px 60px; }
   .development-copy p { font-size: 12px; }
   .development-school { right: 14px; bottom: 14px; font-size: 10px; }

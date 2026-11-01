@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🦉 올빼미 급식 비교소 — 전국 학교급식 비교 분석</title>
+  <meta name="description" content="NEIS 교육정보 개방 포털의 공개 API로 전국 초·중·고 급식을 날짜별로 불러와 두 학교의 영양과 식단을 비교 분석합니다.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= 맨 위 제목 ================= -->
+  <header class="topbar">
+    <div class="grow">
+      <h1>🦉 올빼미 급식 비교소</h1>
+      <p class="sub">
+        NEIS 교육정보 개방 포털의 공개 API로 <b>전국 초·중·고</b> 급식을 불러와,
+        <b>두 학교</b>의 영양소와 식단 구성을 비교 분석합니다.
+      </p>
+    </div>
+    <button id="themeBtn" class="icon-btn" type="button" title="밝은 화면 / 어두운 화면 바꾸기">🌙</button>
+  </header>
+
+  <!-- ================= 1) 조건 고르기 ================= -->
+  <section class="panel controls">
+    <h2>1️⃣ 날짜와 학교 두 곳을 고르세요</h2>
+    <p class="hint">날짜 → 끼니 → 학교 A → 학교 B 를 고른 다음 <b>비교하기</b> 버튼을 누릅니다.</p>
+
+    <div class="row">
+      <label class="field">
+        <span>날짜</span>
+        <input type="date" id="date">
+      </label>
+
+      <label class="field">
+        <span>끼니</span>
+        <select id="mealType">
+          <option value="2" selected>중식(점심)</option>
+          <option value="1">조식(아침)</option>
+          <option value="3">석식(저녁)</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>영양 기준</span>
+        <select id="levelSel">
+          <option value="auto" selected>학교급에 맞춰 자동</option>
+          <option value="e13">초등 1~3학년</option>
+          <option value="e46">초등 4~6학년</option>
+          <option value="m">중학교</option>
+          <option value="h">고등학교</option>
+        </select>
+      </label>
+
+      <button id="compareBtn" class="primary" type="button">📊 두 학교 비교하기</button>
+      <button id="recentBtn" type="button" title="선택한 날짜부터 거꾸로 찾아 급식이 있는 날로 옮깁니다">🔎 급식 있는 날 찾기</button>
+      <button id="demoBtn" type="button">🎬 예시 데이터로 먼저 보기</button>
+    </div>
+
+    <!-- 학교 A / B 고르는 상자 : 구조가 똑같습니다 -->
+    <div class="pickers">
+      <div class="picker" data-slot="A">
+        <span class="chip chip-a">학교 A</span>
+        <div class="search-row">
+          <select class="sido" aria-label="학교 A 시도교육청"></select>
+          <input class="q" type="text" placeholder="학교 이름 일부 (예: 창원고)" aria-label="학교 A 이름 검색">
+          <button class="searchBtn" type="button">검색</button>
+        </div>
+        <ul class="results"></ul>
+        <div class="chosen">아직 고르지 않았습니다.</div>
+      </div>
+
+      <div class="picker" data-slot="B">
+        <span class="chip chip-b">학교 B</span>
+        <div class="search-row">
+          <select class="sido" aria-label="학교 B 시도교육청"></select>
+          <input class="q" type="text" placeholder="학교 이름 일부 (예: 경기초)" aria-label="학교 B 이름 검색">
+          <button class="searchBtn" type="button">검색</button>
+        </div>
+        <ul class="results"></ul>
+        <div class="chosen">아직 고르지 않았습니다.</div>
+      </div>
+    </div>
+
+    <!-- 인증키 -->
+    <details class="keybox">
+      <summary>🔑 NEIS 인증키 넣기 — 학교 검색 결과를 5곳보다 많이 보려면 필요합니다</summary>
+      <p>
+        인증키가 <b>없어도 급식 비교는 됩니다.</b> 다만 <b>한 번에 5줄</b>만 받아올 수 있어서
+        학교 검색 결과가 5곳까지만 보입니다.<br>
+        키 받는 곳 →
+        <a href="https://open.neis.go.kr" target="_blank" rel="noopener">open.neis.go.kr</a>
+        (회원가입 → 인증키 신청 → 즉시 발급, 무료)
+      </p>
+      <div class="row">
+        <input type="password" id="apiKey" placeholder="발급받은 인증키를 붙여넣기" autocomplete="off">
+        <button id="saveKeyBtn" type="button">저장</button>
+        <button id="clearKeyBtn" type="button">지우기</button>
+      </div>
+      <p id="keyState">저장된 키 없음 (키 없이 사용 중)</p>
+    </details>
+  </section>
+
+  <!-- ================= 알림줄 ================= -->
+  <p class="status" id="status" hidden></p>
+
+  <!-- ================= 2) 결과 ================= -->
+  <main id="result" hidden>
+
+    <div class="caution">
+      <b>⚠️ 먼저 읽어 주세요.</b>
+      아래 점수는 <b>이 수업에서 우리가 직접 만든 기준</b>으로 계산한 값입니다.
+      학교급식의 우수성을 판정하는 공식 지표가 아닙니다.
+      학교마다 학생 수, 급식 예산, 지역 식재료 사정, 학교급이 다르기 때문에
+      점수가 낮다고 급식이 나쁜 것이 아닙니다. “왜 이런 차이가 났을까?”를 이야기하는 데 사용하세요.
+    </div>
+
+    <!-- 총점 -->
+    <section class="panel">
+      <h2>🏅 종합 점수 (우리가 만든 기준)</h2>
+      <p class="hint" id="scoreSub"></p>
+      <div class="scoreboard" id="scoreboard"></div>
+    </section>
+
+    <!-- 5개 항목 + 레이더 -->
+    <section class="panel">
+      <h2>🕸️ 항목별 점수 비교</h2>
+      <p class="hint">다섯 항목을 0~100점으로 바꾼 뒤 겹쳐 그렸습니다. 넓게 퍼진 쪽이 고르게 좋은 급식입니다.</p>
+      <div class="legend" id="legend1"></div>
+      <div class="radar-area">
+        <div id="radar"></div>
+        <div class="bars" id="scoreBars"></div>
+      </div>
+
+      <h3 style="margin-top:24px;font-size:14px">⚖️ 항목 중요도 바꿔 보기</h3>
+      <p class="hint">“무엇이 좋은 급식인가?”는 사람마다 다릅니다. 막대를 움직여 여러분의 기준을 만들어 보세요.</p>
+      <div class="weights" id="weights"></div>
+    </section>
+
+    <!-- 식단 -->
+    <section class="panel">
+      <h2>🍚 오늘의 식단</h2>
+      <p class="hint">요리 이름 뒤의 숫자는 <b>알레르기 유발 식품 번호</b>입니다. 마우스를 올리면 이름이 나옵니다.</p>
+      <div class="two-col" id="mealCards"></div>
+    </section>
+
+    <!-- 영양소 -->
+    <section class="panel">
+      <h2>🥗 영양소 비교</h2>
+      <p class="hint" id="nutriHint"></p>
+      <div class="legend" id="legend2"></div>
+      <div class="bars" id="nutriBars"></div>
+    </section>
+
+    <!-- 식품군 -->
+    <section class="panel">
+      <h2>🧺 식품군 구성</h2>
+      <p class="hint">요리 이름에 들어 있는 낱말로 자동 분류했습니다. 컴퓨터가 잘못 분류한 요리가 있는지 찾아보세요!</p>
+      <div class="stack-legend" id="groupLegend"></div>
+      <div id="groupStacks" style="margin-top:14px"></div>
+    </section>
+
+    <!-- 원산지 -->
+    <section class="panel">
+      <h2>🌏 원산지 비교</h2>
+      <p class="hint">두 학교가 서로 다르게 적어 둔 항목은 <b>진하게</b> 표시했습니다.</p>
+      <div class="scroll-x"><table class="cmp" id="originTable"></table></div>
+    </section>
+
+    <!-- 코멘트 -->
+    <section class="panel">
+      <h2>💬 자동 분석 결과</h2>
+      <ul class="comments" id="comments"></ul>
+      <h3 style="margin-top:22px;font-size:14px">🤔 함께 생각해 볼 질문</h3>
+      <ol class="questions" id="questions"></ol>
+    </section>
+
+    <div class="row actions">
+      <button id="csvBtn" type="button">💾 결과를 CSV로 저장</button>
+      <button id="printBtn" type="button">🖨️ 인쇄 / PDF로 저장</button>
+    </div>
+  </main>
+
+  <footer class="foot">
+    자료 출처: <a href="https://open.neis.go.kr" target="_blank" rel="noopener">NEIS 교육정보 개방 포털</a>
+    (학교기본정보 · 급식식단정보) · 공공데이터<br>
+    영양 참고 기준: 학교급식법 시행규칙 별표 3 「학교급식의 영양관리기준」 —
+    <b>수업용 참고값이므로 최신 고시를 확인하세요.</b><br>
+    🦉 수업용 학습 자료 · 개인정보를 수집하지 않습니다.
+  </footer>
+
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
