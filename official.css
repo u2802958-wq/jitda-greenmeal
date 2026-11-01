@@ -318,8 +318,7 @@ body { background: #f1f4f8; color: var(--ink); }
   .development-school { right: 14px; bottom: 14px; font-size: 10px; }
 }
 .dataset-notice { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 17px; padding: 15px 17px; border: 1px solid #b9c9da; border-left: 4px solid #17385f; background: #eaf0f7; color: #243d59; }
-.dataset-notice-label { flex: 0 0 auto; padding: 3px 7px; border: 1px solid #aebfd1; background: #d9e4f0; color: #203f64; font-size: 10px; font-weight: 700; }
-.dataset-notice strong { display: block; color: #16385f; font-size: 13px; font-weight: 700; }
+.dataset-notice strong { display: block; color: #16385f; font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
 .dataset-notice p { margin: 4px 0 0; color: #344f6c; font-size: 12px; line-height: 1.6; }
 
 @media (max-width: 480px) {
@@ -330,5 +329,6 @@ body { background: #f1f4f8; color: var(--ink); }
   .content { padding-bottom: 180px; }
   .workflow-step-compare { margin-top: 20px; padding-top: 14px; }
   .compare-cards { grid-template-columns: 1fr; }
-  .dataset-notice { flex-direction: column; gap: 7px; padding: 12px; }
+  .dataset-notice { padding: 14px; }
+  .dataset-notice strong { font-size: 16px; }
 }
