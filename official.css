@@ -74,7 +74,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .step2-rules { display: flex; min-width: 0; justify-content: flex-end; gap: 7px; }
 .step2-rules p { display: flex; min-width: 0; align-items: flex-start; gap: 7px; margin: 0; padding: 8px 9px; border: 1px solid #c7d5e2; background: #f0f4f8; color: #314a64; font-size: 13px; line-height: 1.45; }
 .step2-rules b { flex: 0 0 auto; color: #17385f; font-weight: 700; }
-.step2-howto { margin: -1px 0 14px 53px; color: #405d78; font-size: 13px; line-height: 1.5; }
+.step2-howto { margin: -1px 0 14px 53px; color: #284a6c; font-size: 13px; font-weight: 600; line-height: 1.5; }
+.step2-howto strong { color: #122f52; font-weight: 800; }
+.favorite-heading { color: #17385f; font-size: 12px; font-weight: 800; }
+.favorite-heading span { background: #dce7f2; color: #17385f; }
 .source-head { color: #314653; }
 .source-head button, .chosen-actions button { border-radius: 3px; border-color: #cbd4db; color: #405867; }
 .menu-search { border-radius: 3px; border-color: #bfcbd3; }
