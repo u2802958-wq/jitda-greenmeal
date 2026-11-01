@@ -71,11 +71,9 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .workflow-step-final { margin-top: 17px; }
 .workflow-step-menu { display: grid; grid-template-columns: 40px minmax(155px, .7fr) minmax(0, 1.5fr); align-items: center; gap: 12px; }
 .workflow-step-copy { min-width: 0; }
-.step2-rules { display: flex; min-width: 0; justify-content: flex-end; gap: 7px; }
+.step2-rules { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .step2-rules p { display: flex; min-width: 0; align-items: flex-start; gap: 7px; margin: 0; padding: 8px 9px; border: 1px solid #c7d5e2; background: #f0f4f8; color: #314a64; font-size: 13px; line-height: 1.45; }
 .step2-rules b { flex: 0 0 auto; color: #17385f; font-weight: 700; }
-.step2-howto { margin: -1px 0 14px 53px; color: #284a6c; font-size: 13px; font-weight: 600; line-height: 1.5; }
-.step2-howto strong { color: #122f52; font-weight: 800; }
 .favorite-heading { color: #17385f; font-size: 12px; font-weight: 800; }
 .favorite-heading span { background: #dce7f2; color: #17385f; }
 .source-head { color: #314653; }
@@ -174,7 +172,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   .content { padding: 23px 18px 36px; }
   .workflow-step-menu { grid-template-columns: 40px minmax(0, 1fr); align-items: start; }
   .step2-rules { grid-column: 2; display: grid; grid-template-columns: 1fr; }
-  .step2-howto { margin-left: 53px; }
 }
 
 @media (max-width: 480px) {
