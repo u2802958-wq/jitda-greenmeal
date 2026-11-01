@@ -25,6 +25,7 @@ MODEL_2_FILE = MODEL_DIR / "model_2.joblib"
 MODEL_4_FILE = MODEL_DIR / "model_4.joblib"
 ACTIVE_MODEL_FILE = MODEL_DIR / "active_model.json"
 CACHE_FILE = DATA_DIR / "menu_cache.json"
+MENU_HISTORY_FILE = DATA_DIR / "neis_menu_history.json"
 NEIS_URL = "https://open.neis.go.kr/hub/mealServiceDietInfo"
 API_KEY = os.getenv("NEIS_API_KEY", "")
 SCHOOL_CODE = "S10"
@@ -477,6 +478,7 @@ model_4 = None
 model_4_error = ""
 model_4_failed = False
 menu_cache = {}
+historical_menu_cache = {}
 
 
 def load_cache():
@@ -486,6 +488,31 @@ def load_cache():
             menu_cache = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             menu_cache = {}
+
+
+def load_historical_menu_cache():
+    if not MENU_HISTORY_FILE.exists():
+        return {}
+    try:
+        payload = json.loads(MENU_HISTORY_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+    history = {}
+    for date, rows in payload.items():
+        for row in rows:
+            meal = row.get("MMEAL_SC_NM")
+            if meal not in MEAL_CODES:
+                continue
+            raw_menu = row.get("DDISH_NM") or ""
+            dishes = [
+                re.sub(r"\s*\([\d.]+\)", "", item).strip()
+                for item in raw_menu.split("<br/>")
+            ]
+            dishes = [dish for dish in dishes if dish]
+            if dishes:
+                history[cache_key(date, meal)] = dishes
+    return history
 
 
 def save_cache():
@@ -556,6 +583,61 @@ def classify_dish(dish):
         if any(keyword in dish for keyword in keywords):
             return category
     return "기타 메뉴"
+
+
+def historical_menu_stats(meal):
+    meal_rows = waste_df[waste_df["meal"] == meal]
+    if meal_rows.empty:
+        return {}, 0.0
+
+    meal_average = float(meal_rows["waste"].mean())
+    totals = {}
+    for row in meal_rows.itertuples(index=False):
+        key = cache_key(row.date, row.meal)
+        dishes = historical_menu_cache.get(key) or menu_cache.get(key, [])
+        for dish in set(dishes):
+            item = totals.setdefault(dish, {"count": 0, "waste": 0.0})
+            item["count"] += 1
+            item["waste"] += float(row.waste)
+
+    stats = {
+        dish: {
+            "count": item["count"],
+            "average_waste": item["waste"] / item["count"],
+            "difference": item["waste"] / item["count"] - meal_average,
+        }
+        for dish, item in totals.items()
+    }
+    return stats, meal_average
+
+
+def validate_menu(meal, raw_dishes):
+    if (
+        not isinstance(meal, str)
+        or meal not in MEAL_CODES
+        or not isinstance(raw_dishes, list)
+    ):
+        return None, "끼니와 메뉴를 하나 이상 선택해 주세요."
+    if any(not isinstance(dish, str) for dish in raw_dishes):
+        return None, "메뉴 형식이 올바르지 않습니다."
+
+    dishes = list(dict.fromkeys(dish.strip() for dish in raw_dishes if dish.strip()))
+    if not dishes:
+        return None, "끼니와 메뉴를 하나 이상 선택해 주세요."
+    if not any(classify_dish(dish) == "밥류" for dish in dishes):
+        return None, "밥류 한 종류는 필수로 선택해야 합니다."
+    if not any(classify_dish(dish) in {"반찬류", "김치·나물류"} for dish in dishes):
+        return None, "반찬류 또는 김치·나물류에서 하나 이상 선택해야 합니다."
+
+    category_counts = {}
+    for dish in dishes:
+        category = classify_dish(dish)
+        category_counts[category] = category_counts.get(category, 0) + 1
+    for category, count in category_counts.items():
+        limit = 1 if category in {"밥류", "국·찌개류"} else 3
+        if count > limit:
+            return None, f"{category}는 {limit}개까지만 선택할 수 있습니다."
+    return dishes, None
 
 
 def dish_family(dish):
@@ -780,6 +862,7 @@ def background_sync():
 
 
 load_cache()
+historical_menu_cache = load_historical_menu_cache()
 train_model()
 load_model_4()
 if API_KEY and len(records_with_menu()) < len(waste_df) * 0.8:
@@ -813,6 +896,8 @@ def catalog():
     dishes = set(DEFAULT_MENU)
     for cached_menu in menu_cache.values():
         dishes.update(cached_menu)
+    for historic_menu in historical_menu_cache.values():
+        dishes.update(historic_menu)
     categories = {category: [] for category in [*CATEGORY_RULES.keys(), "기타 메뉴"]}
     groups = {category: {} for category in categories}
     for dish in sorted(dishes):
@@ -840,25 +925,9 @@ def catalog():
 def predict():
     payload = request.get_json(silent=True) or {}
     meal = payload.get("meal")
-    dishes = list(dict.fromkeys(payload.get("dishes", [])))
-    if meal not in MEAL_CODES or not dishes:
-        return jsonify({"error": "끼니와 메뉴를 하나 이상 선택해 주세요."}), 400
-    if not any(classify_dish(dish) == "밥류" for dish in dishes):
-        return jsonify({"error": "밥류 한 종류는 필수로 선택해야 합니다."}), 400
-    if not any(classify_dish(dish) in {"반찬류", "김치·나물류"} for dish in dishes):
-        return jsonify(
-            {"error": "반찬류 또는 김치·나물류에서 하나 이상 선택해야 합니다."}
-        ), 400
-    category_counts = {}
-    for dish in dishes:
-        category = classify_dish(dish)
-        category_counts[category] = category_counts.get(category, 0) + 1
-    for category, count in category_counts.items():
-        limit = 1 if category in {"밥류", "국·찌개류"} else 3
-        if count > limit:
-            return jsonify(
-                {"error": f"{category}는 {limit}개까지만 선택할 수 있습니다."}
-            ), 400
+    dishes, error = validate_menu(meal, payload.get("dishes"))
+    if error:
+        return jsonify({"error": error}), 400
     base = predict_value(meal, dishes)
     average = float(waste_df[waste_df["meal"] == meal]["waste"].mean())
     return jsonify(
@@ -867,6 +936,102 @@ def predict():
             "delta": round(base - average, 2),
             "model_version": training.get("active_model", "model_1"),
             "note": f"{meal}의 실제 기록 평균 {average:.1f}kg과 메뉴 조합을 함께 비교한 모델 추정값입니다.",
+        }
+    )
+
+
+@app.post("/api/menu-analysis")
+def menu_analysis():
+    payload = request.get_json(silent=True) or {}
+    meal = payload.get("meal")
+    dishes = payload.get("dishes")
+    if not isinstance(meal, str) or meal not in MEAL_CODES:
+        return jsonify({"error": "끼니 값이 올바르지 않습니다."}), 400
+    if not isinstance(dishes, list) or any(
+        not isinstance(dish, str) for dish in dishes
+    ):
+        return jsonify({"error": "메뉴 목록 형식이 올바르지 않습니다."}), 400
+
+    stats, meal_average = historical_menu_stats(meal)
+    results = []
+    for dish in dict.fromkeys(item.strip() for item in dishes if item.strip()):
+        item = stats.get(dish)
+        results.append(
+            {
+                "dish": dish,
+                "category": classify_dish(dish),
+                "occurrences": item["count"] if item else 0,
+                "average_waste": round(item["average_waste"], 2) if item else None,
+                "meal_average": round(meal_average, 2),
+                "difference": round(item["difference"], 2) if item else None,
+            }
+        )
+    return jsonify({"meal": meal, "results": results})
+
+
+@app.post("/api/alternatives")
+def alternatives():
+    payload = request.get_json(silent=True) or {}
+    meal = payload.get("meal")
+    dishes, error = validate_menu(meal, payload.get("dishes"))
+    if error:
+        return jsonify({"error": error}), 400
+
+    target = payload.get("target")
+    if not isinstance(target, str) or target not in dishes:
+        return jsonify({"error": "대체할 메뉴를 현재 식단에서 찾지 못했습니다."}), 400
+
+    target_category = classify_dish(target)
+    stats, _ = historical_menu_stats(meal)
+    candidates = {
+        dish
+        for source in (historical_menu_cache.values(), menu_cache.values())
+        for menu in source
+        for dish in menu
+        if dish != target
+        and dish not in dishes
+        and classify_dish(dish) == target_category
+    }
+    candidates.update(
+        dish
+        for dish in DEFAULT_MENU
+        if dish != target
+        and dish not in dishes
+        and classify_dish(dish) == target_category
+    )
+
+    known = sorted(
+        (dish for dish in candidates if dish in stats),
+        key=lambda dish: (stats[dish]["difference"], -stats[dish]["count"], dish),
+    )
+    unknown = sorted(candidates.difference(known))
+    shortlist = (known[:24] + unknown[: max(0, 24 - len(known))])[:24]
+    baseline = predict_value(meal, dishes)
+    predictions = []
+    for candidate in shortlist:
+        replacement = [candidate if dish == target else dish for dish in dishes]
+        prediction = predict_value(meal, replacement)
+        history = stats.get(candidate)
+        predictions.append(
+            {
+                "dish": candidate,
+                "category": target_category,
+                "prediction": round(prediction, 2),
+                "difference": round(prediction - baseline, 2),
+                "occurrences": history["count"] if history else 0,
+                "historical_difference": round(history["difference"], 2)
+                if history
+                else None,
+            }
+        )
+    predictions.sort(key=lambda item: (item["prediction"], item["dish"]))
+
+    return jsonify(
+        {
+            "target": target,
+            "baseline_prediction": round(baseline, 2),
+            "model_version": training.get("active_model", "model_1"),
+            "recommendations": predictions[:5],
         }
     )
 

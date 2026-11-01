@@ -8,7 +8,7 @@ function readFavorites() {
   }
 }
 
-const state = { meal: '중식', menu: [], categories: {}, groups: {}, favorites: new Set(readFavorites()), activeCategory: '밥류', search: '', basePrediction: null, lastResult: null, lastPrediction: null, predictionSignature: null, scenarioA: null, scenarioB: null, comparisonPending: false, comparisonSeen: false };
+const state = { meal: '중식', menu: [], categories: {}, groups: {}, favorites: new Set(readFavorites()), activeCategory: '밥류', search: '', basePrediction: null, lastResult: null, lastPrediction: null, predictionSignature: null, scenarioA: null, scenarioB: null, comparisonPending: false, comparisonSeen: false, menuAnalysisRequest: 0 };
 const CO2E_PER_KG_WASTE = 0.158;
 const TREE_CO2_KG_PER_YEAR = 6.6;
 const $ = (selector) => document.querySelector(selector);
@@ -128,10 +128,91 @@ function renderChosen() {
   updateScenarioControls();
   $$('[data-remove]').forEach((button) => button.addEventListener('click', () => toggleDish(button.dataset.remove)));
   $$('.menu-chip').forEach((button) => button.classList.toggle('selected', state.menu.includes(button.dataset.dish)));
+  loadMenuAnalysis();
 }
 
 function categoryOf(dish) {
   return Object.keys(state.categories).find((category) => state.categories[category].includes(dish)) || '기타 메뉴';
+}
+
+function canCompareMenuAlternatives() {
+  const counts = {};
+  state.menu.forEach((dish) => {
+    const category = categoryOf(dish);
+    counts[category] = (counts[category] || 0) + 1;
+  });
+  return state.menu.some((dish) => categoryOf(dish) === '밥류')
+    && state.menu.some((dish) => ['반찬류', '김치·나물류'].includes(categoryOf(dish)))
+    && Object.entries(counts).every(([category, count]) => count <= (['밥류', '국·찌개류'].includes(category) ? 1 : 3));
+}
+
+async function loadMenuAnalysis() {
+  const container = $('#menuAnalysisResults');
+  const requestId = ++state.menuAnalysisRequest;
+  if (!state.menu.length) {
+    container.innerHTML = '<span class="empty-state">식단을 선택하면 메뉴별 기록을 보여드립니다.</span>';
+    return;
+  }
+
+  const signature = currentMenuSignature();
+  container.innerHTML = '<span class="empty-state">과거 메뉴 기록을 확인하고 있습니다...</span>';
+  try {
+    const response = await fetch('/api/menu-analysis', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ meal: state.meal, dishes: state.menu }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    if (requestId !== state.menuAnalysisRequest || signature !== currentMenuSignature()) return;
+
+    const canSuggest = canCompareMenuAlternatives();
+    container.innerHTML = data.results.map((item, index) => {
+      const history = item.occurrences
+        ? `<span>포함된 끼니 ${item.occurrences}회</span><span>끼니 평균 ${item.average_waste.toFixed(2)} kg</span><span class="menu-history-difference ${item.difference > 0.05 ? 'is-high' : item.difference < -0.05 ? 'is-low' : ''}">${item.difference > 0.05 ? '+' : ''}${item.difference.toFixed(2)} kg · ${item.difference > 0.05 ? '평균보다 많음' : item.difference < -0.05 ? '평균보다 적음' : '평균과 비슷'}</span>`
+        : '<span class="menu-history-missing">일치하는 과거 메뉴 기록이 없습니다.</span>';
+      return `<article class="menu-analysis-item"><div class="menu-analysis-item-heading"><strong>${escapeHtml(item.dish)}</strong><span>${escapeHtml(item.category)}</span></div><div class="menu-history-metrics">${history}</div><button type="button" class="menu-alt-action" data-alt-index="${index}" ${canSuggest ? '' : 'disabled'}>같은 분류 대체안 예측</button><div class="menu-alt-results" data-alt-results="${index}"></div></article>`;
+    }).join('');
+  } catch (error) {
+    if (requestId === state.menuAnalysisRequest && signature === currentMenuSignature()) {
+      container.innerHTML = '<span class="empty-state">메뉴별 기록을 불러오지 못했습니다.</span>';
+    }
+  }
+}
+
+async function loadMenuAlternatives(index) {
+  const target = state.menu[index];
+  const signature = currentMenuSignature();
+  const button = $(`[data-alt-index="${index}"]`);
+  const results = $(`[data-alt-results="${index}"]`);
+  if (!target || !canCompareMenuAlternatives() || !button || !results) return;
+
+  button.disabled = true;
+  button.textContent = '현재 모델로 다시 예측 중...';
+  try {
+    const response = await fetch('/api/alternatives', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ meal: state.meal, dishes: state.menu, target }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    if (signature !== currentMenuSignature()) return;
+
+    results.innerHTML = data.recommendations.length ? data.recommendations.map((item) => {
+      const change = item.difference;
+      const impact = Math.abs(change) < 0.05
+        ? '현재 식단과 비슷한 예측'
+        : `${Math.abs(change).toFixed(2)} kg ${change < 0 ? '감소' : '증가'} 예측`;
+      const history = item.occurrences ? `과거 ${item.occurrences}회 제공 · ` : '과거 메뉴 기록 없음 · ';
+      return `<div class="menu-alt-result"><div><strong>${escapeHtml(item.dish)}</strong><small>${history}현재 모델 ${item.prediction.toFixed(2)} kg · ${impact}</small></div><button type="button" data-target="${escapeHtml(target)}" data-replacement="${escapeHtml(item.dish)}">교체</button></div>`;
+    }).join('') : '<span class="menu-history-missing">같은 분류에서 비교할 대체 메뉴가 없습니다.</span>';
+  } catch (error) {
+    if (signature === currentMenuSignature()) results.innerHTML = '<span class="menu-history-missing">대체 메뉴 예측을 불러오지 못했습니다.</span>';
+  } finally {
+    if (signature === currentMenuSignature() && button.isConnected) {
+      button.disabled = false;
+      button.textContent = '같은 분류 대체안 다시 보기';
+    }
+  }
 }
 
 function showSelectionNotice(message) {
@@ -202,13 +283,19 @@ function updateScenarioPreferenceSummary() {
     summary.textContent = '식단안 B를 저장하면 두 안의 예상 잔반량을 비교합니다.';
     return;
   }
-  const difference = Math.abs(state.scenarioA.prediction - state.scenarioB.prediction);
-  if (difference < .05) {
-    summary.textContent = '두 식단안의 예상 잔반량은 비슷합니다. 영양 구성과 학생 의견을 함께 살펴보세요.';
+  if (state.scenarioA.model_version !== state.scenarioB.model_version) {
+    summary.textContent = '두 식단안이 서로 다른 예측 모델로 계산되어 직접 비교하기 어렵습니다. 같은 모델로 다시 예측해 주세요.';
     return;
   }
-  const preferred = state.scenarioA.prediction < state.scenarioB.prediction ? '식단안 A' : '식단안 B';
-  summary.textContent = `${preferred}의 예상 잔반량이 ${difference.toFixed(1)}kg 더 적습니다. 영양 구성이 비슷하다면 학생들이 더 선호할 가능성이 있습니다.`;
+  const difference = Math.abs(state.scenarioA.prediction - state.scenarioB.prediction);
+  if (difference < .05) {
+    summary.textContent = '현재 모델 기준으로 두 식단안의 예상 잔반량은 거의 같습니다. 실제 잔반 기록과 학생 의견도 함께 확인해 주세요.';
+    return;
+  }
+  const lower = state.scenarioA.prediction < state.scenarioB.prediction ? '식단안 A' : '식단안 B';
+  const higherValue = Math.max(state.scenarioA.prediction, state.scenarioB.prediction);
+  const percentage = higherValue > 0 ? difference / higherValue * 100 : 0;
+  summary.textContent = `현재 모델은 ${lower}의 예상 잔반량을 ${difference.toFixed(2)} kg (${percentage.toFixed(1)}%) 더 낮게 계산했습니다.`;
 }
 
 function updateScenarioStatus(prefix, scenario) {
@@ -253,7 +340,7 @@ function closeScenarioComparison() {
 
 async function saveScenarioB() {
   if (!hasCurrentPrediction() || !state.menu.length || state.comparisonPending) return;
-  state.scenarioB = { prediction: state.lastPrediction, delta: state.lastResult.delta, menu: [...state.menu], meal: state.meal };
+  state.scenarioB = { prediction: state.lastPrediction, delta: state.lastResult.delta, menu: [...state.menu], meal: state.meal, model_version: state.lastResult.model_version };
   state.comparisonPending = true;
   state.comparisonSeen = false;
   updateScenarioPanel();
@@ -745,8 +832,23 @@ $('#menuSearch').addEventListener('input', (event) => { state.search = event.tar
 $('#clearSearch').addEventListener('click', () => { state.search = ''; $('#menuSearch').value = ''; renderCatalog(); $('#menuSearch').focus(); });
 $('#predictButton').addEventListener('click', () => predict(false));
 $('#forcePredict').addEventListener('click', () => predict(true));
+$('#menuAnalysisResults').addEventListener('click', (event) => {
+  const alternativeButton = event.target.closest('[data-alt-index]');
+  if (alternativeButton) {
+    loadMenuAlternatives(Number(alternativeButton.dataset.altIndex));
+    return;
+  }
+  const applyButton = event.target.closest('[data-replacement]');
+  if (!applyButton) return;
+  const { target, replacement } = applyButton.dataset;
+  if (!state.menu.includes(target) || state.menu.includes(replacement)) return;
+  state.menu = state.menu.map((dish) => dish === target ? replacement : dish);
+  renderCatalog();
+  renderChosen();
+  showSelectionNotice(`${target}을(를) ${replacement}(으)로 바꿨어요. 새 식단을 다시 예측해 주세요.`);
+});
 $('#compareAnalysisButton').addEventListener('click', () => { if (state.scenarioA && state.scenarioB) $('#comparePanel').hidden = false; });
-$('#saveScenarioButton').addEventListener('click', () => { if (!hasCurrentPrediction()) return; state.scenarioA = { prediction: state.lastPrediction, delta: state.lastResult.delta, menu: [...state.menu], meal: state.meal }; state.scenarioB = null; state.comparisonPending = false; state.comparisonSeen = false; updateScenarioPanel(); clearSelectedMenu(); showSelectionNotice('식단안 A를 저장했습니다. 다른 식단을 구성해 B안으로 저장하세요.'); });
+  $('#saveScenarioButton').addEventListener('click', () => { if (!hasCurrentPrediction()) return; state.scenarioA = { prediction: state.lastPrediction, delta: state.lastResult.delta, menu: [...state.menu], meal: state.meal, model_version: state.lastResult.model_version }; state.scenarioB = null; state.comparisonPending = false; state.comparisonSeen = false; updateScenarioPanel(); clearSelectedMenu(); showSelectionNotice('식단안 A를 저장했습니다. 다른 식단을 구성해 B안으로 저장하세요.'); });
 $('#saveScenarioBButton').addEventListener('click', saveScenarioB);
 $('#closeCompare').addEventListener('click', closeScenarioComparison);
 $('#comparePanel').addEventListener('click', (event) => { if (event.target.id === 'comparePanel') closeScenarioComparison(); });
