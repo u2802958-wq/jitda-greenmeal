@@ -180,15 +180,35 @@ function updateScenarioPanel() {
   $('#compareAnalysisButton').disabled = !state.scenarioA || !state.scenarioB;
   $('#scenarioAPrediction').textContent = `${state.scenarioA.prediction.toFixed(2)} kg`;
   $('#scenarioAMenu').textContent = state.scenarioA.menu.join(' · ');
+  updateScenarioStatus('scenarioA', state.scenarioA);
   updateCarbonEstimate('scenarioA', state.scenarioA);
   if (state.scenarioB) {
     $('#scenarioBPrediction').textContent = `${state.scenarioB.prediction.toFixed(2)} kg`;
     $('#scenarioBMenu').textContent = state.scenarioB.menu.join(' · ');
+    updateScenarioStatus('scenarioB', state.scenarioB);
     updateCarbonEstimate('scenarioB', state.scenarioB);
   } else {
     $('#scenarioBPrediction').textContent = '-- kg';
     $('#scenarioBMenu').textContent = '저장 전';
+    updateScenarioStatus('scenarioB', null);
     updateCarbonEstimate('scenarioB', null);
+  }
+}
+
+function updateScenarioStatus(prefix, scenario) {
+  const status = $(`#${prefix}Status`);
+  status.classList.remove('status-high', 'status-average', 'status-improved');
+  status.hidden = !scenario;
+  if (!scenario) return;
+  if (scenario.delta > .05) {
+    status.classList.add('status-high');
+    status.textContent = '주의 · 평균보다 잔반이 많을 수 있어 학생 선호도를 확인해 보세요.';
+  } else if (scenario.delta < -.05) {
+    status.classList.add('status-improved');
+    status.textContent = '개선 · 평균보다 잔반량이 적게 예상되는 식단안입니다.';
+  } else {
+    status.classList.add('status-average');
+    status.textContent = '평균 · 평소와 비슷한 잔반량이 예상됩니다.';
   }
 }
 
@@ -217,7 +237,7 @@ function closeScenarioComparison() {
 
 async function saveScenarioB() {
   if (!hasCurrentPrediction() || !state.menu.length || state.comparisonPending) return;
-  state.scenarioB = { prediction: state.lastPrediction, menu: [...state.menu], meal: state.meal };
+  state.scenarioB = { prediction: state.lastPrediction, delta: state.lastResult.delta, menu: [...state.menu], meal: state.meal };
   state.comparisonPending = true;
   state.comparisonSeen = false;
   updateScenarioPanel();
@@ -364,6 +384,11 @@ function installDashboardExtras() {
   const cards = dialog.querySelectorAll('.compare-card');
   cards.forEach((card, index) => {
     const prefix = index === 0 ? 'scenarioA' : 'scenarioB';
+    const status = document.createElement('div');
+    status.className = 'scenario-status';
+    status.id = `${prefix}Status`;
+    status.hidden = true;
+    card.querySelector(`#${prefix}Menu`).insertAdjacentElement('afterend', status);
     const metrics = document.createElement('div');
     metrics.className = 'compare-carbon-metrics';
     metrics.innerHTML = `<div><span>CO₂e 배출 환산</span><strong id="${prefix}Carbon">-- kg CO₂e</strong></div><div><span>30년생 나무 1그루 정화 기간</span><strong id="${prefix}TreeDays">--일</strong></div>`;
@@ -701,7 +726,7 @@ $('#clearSearch').addEventListener('click', () => { state.search = ''; $('#menuS
 $('#predictButton').addEventListener('click', () => predict(false));
 $('#forcePredict').addEventListener('click', () => predict(true));
 $('#compareAnalysisButton').addEventListener('click', () => { if (state.scenarioA && state.scenarioB) $('#comparePanel').hidden = false; });
-$('#saveScenarioButton').addEventListener('click', () => { if (!hasCurrentPrediction()) return; state.scenarioA = { prediction: state.lastPrediction, menu: [...state.menu], meal: state.meal }; state.scenarioB = null; state.comparisonPending = false; state.comparisonSeen = false; updateScenarioPanel(); clearSelectedMenu(); showSelectionNotice('식단안 A를 저장했습니다. 다른 식단을 구성해 B안으로 저장하세요.'); });
+$('#saveScenarioButton').addEventListener('click', () => { if (!hasCurrentPrediction()) return; state.scenarioA = { prediction: state.lastPrediction, delta: state.lastResult.delta, menu: [...state.menu], meal: state.meal }; state.scenarioB = null; state.comparisonPending = false; state.comparisonSeen = false; updateScenarioPanel(); clearSelectedMenu(); showSelectionNotice('식단안 A를 저장했습니다. 다른 식단을 구성해 B안으로 저장하세요.'); });
 $('#saveScenarioBButton').addEventListener('click', saveScenarioB);
 $('#closeCompare').addEventListener('click', closeScenarioComparison);
 $('#comparePanel').addEventListener('click', (event) => { if (event.target.id === 'comparePanel') closeScenarioComparison(); });

@@ -293,6 +293,10 @@ body { background: #f1f4f8; color: var(--ink); }
 .compare-carbon-metrics span { color: #536b84; font-size: 10px; }
 .compare-carbon-metrics strong { margin: 0; color: #1b426d; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .compare-carbon-note { margin: 12px 0 0; color: #536b84; font-size: 10px; line-height: 1.5; }
+.scenario-status { margin-top: 8px; padding: 8px 9px; border: 1px solid; border-radius: 3px; font-size: 11px; font-weight: 600; line-height: 1.5; }
+.scenario-status.status-high { border-color: #d8aaa7; background: #f8eeed; color: #8c3836; }
+.scenario-status.status-average { border-color: #dfc98e; background: #faf4e4; color: #735514; }
+.scenario-status.status-improved { border-color: #b7cadb; background: #edf3f8; color: #234e76; }
 
 .skip-link { position: absolute; z-index: 100; top: -48px; left: 16px; padding: 9px 12px; background: #fff; color: #17385f; }
 .skip-link:focus { top: 12px; }
