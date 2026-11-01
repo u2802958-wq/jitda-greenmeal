@@ -354,6 +354,7 @@ body { background: #f1f4f8; color: var(--ink); }
 .menu-history-difference.is-high { color: #98413b; }
 .menu-history-difference.is-low { color: #285e80; }
 .menu-history-missing { color: #687988; font-size: 10px; }
+.menu-no-improvement { padding: 8px 9px; border-left: 2px solid #a67b29; background: #faf5e8; color: #6c551e; font-size: 10px; line-height: 1.5; }
 .menu-alt-action, .menu-alt-result button { min-height: 30px; margin-top: 8px; padding: 5px 9px; border: 1px solid #9fb3c7; border-radius: 3px; background: #edf3f8; color: #234b78; font-size: 10px; font-weight: 700; }
 .menu-alt-action:disabled { cursor: not-allowed; opacity: .5; }
 .menu-alt-results { display: grid; gap: 6px; }

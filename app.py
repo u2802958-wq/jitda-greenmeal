@@ -585,6 +585,14 @@ def classify_dish(dish):
     return "기타 메뉴"
 
 
+def menu_name_key(dish):
+    compact = re.sub(r"[^가-힣A-Za-z0-9]", "", dish)
+    compact = re.sub(r"^(친환경|수제|국산|유기농)", "", compact)
+    for word in VARIANT_WORDS:
+        compact = compact.replace(word, "")
+    return compact or dish
+
+
 def historical_menu_stats(meal):
     meal_rows = waste_df[waste_df["meal"] == meal]
     if meal_rows.empty:
@@ -595,7 +603,7 @@ def historical_menu_stats(meal):
     for row in meal_rows.itertuples(index=False):
         key = cache_key(row.date, row.meal)
         dishes = historical_menu_cache.get(key) or menu_cache.get(key, [])
-        for dish in set(dishes):
+        for dish in {menu_name_key(name) for name in dishes}:
             item = totals.setdefault(dish, {"count": 0, "waste": 0.0})
             item["count"] += 1
             item["waste"] += float(row.waste)
@@ -896,8 +904,6 @@ def catalog():
     dishes = set(DEFAULT_MENU)
     for cached_menu in menu_cache.values():
         dishes.update(cached_menu)
-    for historic_menu in historical_menu_cache.values():
-        dishes.update(historic_menu)
     categories = {category: [] for category in [*CATEGORY_RULES.keys(), "기타 메뉴"]}
     groups = {category: {} for category in categories}
     for dish in sorted(dishes):
@@ -955,7 +961,7 @@ def menu_analysis():
     stats, meal_average = historical_menu_stats(meal)
     results = []
     for dish in dict.fromkeys(item.strip() for item in dishes if item.strip()):
-        item = stats.get(dish)
+        item = stats.get(menu_name_key(dish))
         results.append(
             {
                 "dish": dish,
@@ -982,36 +988,44 @@ def alternatives():
         return jsonify({"error": "대체할 메뉴를 현재 식단에서 찾지 못했습니다."}), 400
 
     target_category = classify_dish(target)
+    selected_keys = {menu_name_key(dish) for dish in dishes}
     stats, _ = historical_menu_stats(meal)
     candidates = {
         dish
         for source in (historical_menu_cache.values(), menu_cache.values())
         for menu in source
         for dish in menu
-        if dish != target
-        and dish not in dishes
+        if menu_name_key(dish) not in selected_keys
         and classify_dish(dish) == target_category
     }
     candidates.update(
         dish
         for dish in DEFAULT_MENU
-        if dish != target
-        and dish not in dishes
+        if menu_name_key(dish) not in selected_keys
         and classify_dish(dish) == target_category
     )
 
+    def history_for(dish):
+        return stats.get(menu_name_key(dish), {})
+
     known = sorted(
-        (dish for dish in candidates if dish in stats),
-        key=lambda dish: (stats[dish]["difference"], -stats[dish]["count"], dish),
+        (dish for dish in candidates if history_for(dish).get("count", 0) >= 5),
+        key=lambda dish: (-history_for(dish)["count"], dish),
     )
-    unknown = sorted(candidates.difference(known))
-    shortlist = (known[:24] + unknown[: max(0, 24 - len(known))])[:24]
+    low_support = sorted(
+        (dish for dish in candidates if history_for(dish) and dish not in known),
+        key=lambda dish: (-history_for(dish)["count"], dish),
+    )
+    unobserved = sorted(candidates.difference(known, low_support))
+    shortlist = known[:24]
+    shortlist += low_support[: max(0, 24 - len(shortlist))]
+    shortlist += unobserved[: max(0, 24 - len(shortlist))]
     baseline = predict_value(meal, dishes)
     predictions = []
     for candidate in shortlist:
         replacement = [candidate if dish == target else dish for dish in dishes]
         prediction = predict_value(meal, replacement)
-        history = stats.get(candidate)
+        history = history_for(candidate)
         predictions.append(
             {
                 "dish": candidate,

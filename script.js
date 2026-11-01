@@ -168,7 +168,7 @@ async function loadMenuAnalysis() {
     const canSuggest = canCompareMenuAlternatives();
     container.innerHTML = data.results.map((item, index) => {
       const history = item.occurrences
-        ? `<span>포함된 끼니 ${item.occurrences}회</span><span>끼니 평균 ${item.average_waste.toFixed(2)} kg</span><span class="menu-history-difference ${item.difference > 0.05 ? 'is-high' : item.difference < -0.05 ? 'is-low' : ''}">${item.difference > 0.05 ? '+' : ''}${item.difference.toFixed(2)} kg · ${item.difference > 0.05 ? '평균보다 많음' : item.difference < -0.05 ? '평균보다 적음' : '평균과 비슷'}</span>`
+        ? `<span>포함된 끼니 ${item.occurrences}회</span><span>끼니 평균 ${item.average_waste.toFixed(2)} kg</span>${item.occurrences >= 5 ? `<span class="menu-history-difference ${item.difference > 0.05 ? 'is-high' : item.difference < -0.05 ? 'is-low' : ''}">${item.difference > 0.05 ? '+' : ''}${item.difference.toFixed(2)} kg · ${item.difference > 0.05 ? '평균보다 많음' : item.difference < -0.05 ? '평균보다 적음' : '평균과 비슷'}</span>` : '<span class="menu-history-missing">기록이 5회 미만이라 차이는 표시하지 않습니다.</span>'}`
         : '<span class="menu-history-missing">일치하는 과거 메뉴 기록이 없습니다.</span>';
       return `<article class="menu-analysis-item"><div class="menu-analysis-item-heading"><strong>${escapeHtml(item.dish)}</strong><span>${escapeHtml(item.category)}</span></div><div class="menu-history-metrics">${history}</div><button type="button" class="menu-alt-action" data-alt-index="${index}" ${canSuggest ? '' : 'disabled'}>같은 분류 대체안 예측</button><div class="menu-alt-results" data-alt-results="${index}"></div></article>`;
     }).join('');
@@ -197,7 +197,11 @@ async function loadMenuAlternatives(index) {
     if (!response.ok) throw new Error(data.error);
     if (signature !== currentMenuSignature()) return;
 
-    results.innerHTML = data.recommendations.length ? data.recommendations.map((item) => {
+    const noReduction = data.recommendations.length && data.recommendations.every((item) => item.difference >= -0.05);
+    const noReductionNote = noReduction
+      ? '<span class="menu-no-improvement">현재 모델은 이 후보들이 기존 메뉴보다 잔반을 줄일 것으로 예측하지 않았습니다. 메뉴를 바꾼 뒤에도 예측 차이를 확인해 주세요.</span>'
+      : '';
+    results.innerHTML = data.recommendations.length ? noReductionNote + data.recommendations.map((item) => {
       const change = item.difference;
       const impact = Math.abs(change) < 0.05
         ? '현재 식단과 비슷한 예측'
@@ -281,6 +285,10 @@ function updateScenarioPreferenceSummary() {
   const summary = $('#scenarioPreferenceText');
   if (!state.scenarioB) {
     summary.textContent = '식단안 B를 저장하면 두 안의 예상 잔반량을 비교합니다.';
+    return;
+  }
+  if (state.scenarioA.meal !== state.scenarioB.meal) {
+    summary.textContent = '두 식단안의 끼니가 달라 직접 비교하기 어렵습니다. 같은 끼니로 다시 비교해 주세요.';
     return;
   }
   if (state.scenarioA.model_version !== state.scenarioB.model_version) {
@@ -499,7 +507,7 @@ function installDashboardExtras() {
   });
   const preferenceSummary = document.createElement('div');
   preferenceSummary.className = 'compare-preference-summary';
-  preferenceSummary.innerHTML = '<p id="scenarioPreferenceText" role="status" aria-live="polite">두 식단안의 예상 잔반량을 비교합니다.</p><small>잔반량은 학생 선호도의 간접 지표이며, 영양 구성과 실제 의견은 별도 확인이 필요합니다.</small>';
+  preferenceSummary.innerHTML = '<p id="scenarioPreferenceText" role="status" aria-live="polite">두 식단안의 예상 잔반량을 비교합니다.</p><small>두 값은 활성 예측 모델의 추정치이며 실제 잔반량이나 학생 선호를 보장하지 않습니다.</small>';
   dialog.querySelector('.compare-cards').after(preferenceSummary);
   const note = document.createElement('p');
   note.className = 'compare-carbon-note';
