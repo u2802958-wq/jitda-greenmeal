@@ -193,6 +193,22 @@ function updateScenarioPanel() {
     updateScenarioStatus('scenarioB', null);
     updateCarbonEstimate('scenarioB', null);
   }
+  updateScenarioPreferenceSummary();
+}
+
+function updateScenarioPreferenceSummary() {
+  const summary = $('#scenarioPreferenceText');
+  if (!state.scenarioB) {
+    summary.textContent = '식단안 B를 저장하면 두 안의 예상 잔반량을 비교합니다.';
+    return;
+  }
+  const difference = Math.abs(state.scenarioA.prediction - state.scenarioB.prediction);
+  if (difference < .05) {
+    summary.textContent = '두 식단안의 예상 잔반량은 비슷합니다. 영양 구성과 학생 의견을 함께 살펴보세요.';
+    return;
+  }
+  const preferred = state.scenarioA.prediction < state.scenarioB.prediction ? '식단안 A' : '식단안 B';
+  summary.textContent = `${preferred}의 예상 잔반량이 ${difference.toFixed(1)}kg 더 적습니다. 영양 구성이 비슷하다면 학생들이 더 선호할 가능성이 있습니다.`;
 }
 
 function updateScenarioStatus(prefix, scenario) {
@@ -394,6 +410,10 @@ function installDashboardExtras() {
     metrics.innerHTML = `<div><span>CO₂e 배출 환산</span><strong id="${prefix}Carbon">-- kg CO₂e</strong></div><div><span>30년생 나무 1그루 정화 기간</span><strong id="${prefix}TreeDays">--일</strong></div>`;
     card.append(metrics);
   });
+  const preferenceSummary = document.createElement('div');
+  preferenceSummary.className = 'compare-preference-summary';
+  preferenceSummary.innerHTML = '<p id="scenarioPreferenceText" role="status" aria-live="polite">두 식단안의 예상 잔반량을 비교합니다.</p><small>잔반량은 학생 선호도의 간접 지표이며, 영양 구성과 실제 의견은 별도 확인이 필요합니다.</small>';
+  dialog.querySelector('.compare-cards').after(preferenceSummary);
   const note = document.createElement('p');
   note.className = 'compare-carbon-note';
   note.textContent = '환산 참고값: 잔반 1kg당 약 0.158kg CO₂e입니다. 30년생 나무 1그루가 연간 약 6.6kg CO₂e를 흡수한다고 가정해 정화 일수를 환산했습니다.';
