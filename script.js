@@ -269,7 +269,7 @@ async function predict(force = false) {
     return;
   }
   if (!state.menu.length) { $('#predictionNote').textContent = '메뉴를 한 가지 이상 선택해 주세요.'; return; }
-  if (state.meal !== '조식' && !state.menu.some((dish) => categoryOf(dish) === '밥류')) {
+  if (!state.menu.some((dish) => categoryOf(dish) === '밥류')) {
     $('#warningTitle').textContent = '밥류를 선택해 주세요.';
     $('#warningText').textContent = '밥류 한 종류는 필수입니다. 밥류를 선택해야 잔반량을 예측할 수 있습니다.';
     $('#forcePredict').hidden = true;

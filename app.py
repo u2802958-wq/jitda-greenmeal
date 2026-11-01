@@ -526,7 +526,7 @@ def predict():
     dishes = list(dict.fromkeys(payload.get("dishes", [])))
     if meal not in MEAL_CODES or not dishes:
         return jsonify({"error": "끼니와 메뉴를 하나 이상 선택해 주세요."}), 400
-    if meal != "조식" and not any(classify_dish(dish) == "밥류" for dish in dishes):
+    if not any(classify_dish(dish) == "밥류" for dish in dishes):
         return jsonify({"error": "밥류 한 종류는 필수로 선택해야 합니다."}), 400
     if not any(classify_dish(dish) in {"반찬류", "김치·나물류"} for dish in dishes):
         return jsonify(
